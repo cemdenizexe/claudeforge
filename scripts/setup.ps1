@@ -257,7 +257,7 @@ Write-Host "  Installed:" -ForegroundColor White
 Write-Host "    Plugins     16 (zero redundancy)" -ForegroundColor $dim
 Write-Host "    Skills      $($coreSkills.Count) cloned + GSD + plugin bundles" -ForegroundColor $dim
 Write-Host "    Hooks       session-start, sensitive-file-guard, self-learning, skill-discovery, update-check" -ForegroundColor $dim
-Write-Host '    Workflow    GSD (70+ cmds, auto-enforced phases)' -ForegroundColor $dim
+Write-Host '    Workflow    GSD workflow engine' -ForegroundColor $dim
 Write-Host "    Config      Global CLAUDE.md with Skill Activation Guide" -ForegroundColor $dim
 Write-Host "    Dashboard   CodeBurn (npx codeburn)" -ForegroundColor $dim
 if ($HAS_WSL) {
