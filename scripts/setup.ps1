@@ -208,40 +208,40 @@ if (-not (Get-Command "bun" -ErrorAction SilentlyContinue)) {
 # ─── [9/9] WSL Mirror ───
 if ($HAS_WSL) {
     Write-Host "[9/9] Syncing to WSL..." -ForegroundColor Yellow
-    Write-Host "  Claude Code uses WSL — mirroring skills, hooks, and dependencies..." -ForegroundColor $dim
+    Write-Host "  Claude Code uses WSL - mirroring skills, hooks, and dependencies..." -ForegroundColor $dim
 
     # Create WSL .claude directories
-    wsl bash -c "mkdir -p ~/.claude/skills ~/.claude/hooks" 2>$null
+    wsl bash -lc 'mkdir -p ~/.claude/skills ~/.claude/hooks'
 
     # Mirror skills
     Write-Host "  Mirroring skills..." -ForegroundColor $dim
-    $winSkills = Join-Path $SKILLS_DIR "*"
-    wsl bash -c "cp -r /mnt/c/Users/$($env:USERNAME)/.claude/skills/* ~/.claude/skills/ 2>/dev/null" 2>$null
+    $uname = $env:USERNAME
+    wsl bash -lc "cp -r /mnt/c/Users/$uname/.claude/skills/* ~/.claude/skills/"
     Write-Host "  Skills mirrored to WSL." -ForegroundColor Green
 
     # Mirror hooks
     Write-Host "  Mirroring hooks..." -ForegroundColor $dim
-    wsl bash -c "cp /mnt/c/Users/$($env:USERNAME)/.claude/hooks/*.js ~/.claude/hooks/ 2>/dev/null" 2>$null
-    wsl bash -c "cp /mnt/c/Users/$($env:USERNAME)/.claude/hooks/*.py ~/.claude/hooks/ 2>/dev/null" 2>$null
-    wsl bash -c "cp /mnt/c/Users/$($env:USERNAME)/.claude/hooks/*.sh ~/.claude/hooks/ 2>/dev/null" 2>$null
+    wsl bash -lc "cp /mnt/c/Users/$uname/.claude/hooks/*.js ~/.claude/hooks/"
+    wsl bash -lc "cp /mnt/c/Users/$uname/.claude/hooks/*.py ~/.claude/hooks/"
+    wsl bash -lc "cp /mnt/c/Users/$uname/.claude/hooks/*.sh ~/.claude/hooks/"
     Write-Host "  Hooks mirrored to WSL." -ForegroundColor Green
 
     # Mirror CLAUDE.md
-    wsl bash -c "cp /mnt/c/Users/$($env:USERNAME)/.claude/CLAUDE.md ~/.claude/CLAUDE.md 2>/dev/null" 2>$null
+    wsl bash -lc "cp /mnt/c/Users/$uname/.claude/CLAUDE.md ~/.claude/CLAUDE.md"
     Write-Host "  CLAUDE.md mirrored to WSL." -ForegroundColor Green
 
     # Install dependencies in WSL
     Write-Host "  Installing WSL dependencies..." -ForegroundColor $dim
-    wsl bash -c "command -v semgrep >/dev/null 2>&1 || (sudo apt-get install -y python3-pip >/dev/null 2>&1; pip3 install semgrep --break-system-packages >/dev/null 2>&1)" 2>$null
-    wsl bash -c "command -v bun >/dev/null 2>&1 || npm install -g bun >/dev/null 2>&1" 2>$null
+    wsl bash -lc 'which semgrep || pip3 install semgrep --break-system-packages'
+    wsl bash -lc 'which bun || npm install -g bun'
 
-    # Fix PATH for non-interactive shells (hooks run as non-interactive)
-    wsl bash -c "grep -q '.local/bin' ~/.profile 2>/dev/null || echo 'export PATH=\"\$HOME/.local/bin:\$HOME/.npm-global/bin:\$PATH\"' >> ~/.profile" 2>$null
+    # Fix PATH for non-interactive shells
+    wsl bash -lc 'grep -q local/bin ~/.profile || echo "export PATH=\$HOME/.local/bin:\$HOME/.npm-global/bin:\$PATH" >> ~/.profile'
     Write-Host "  WSL dependencies ready." -ForegroundColor Green
 
     # Report
-    $wslSkillCount = wsl bash -c "ls ~/.claude/skills/ 2>/dev/null | wc -l" 2>$null
-    $wslHookCount = wsl bash -c "ls ~/.claude/hooks/ 2>/dev/null | wc -l" 2>$null
+    $wslSkillCount = wsl bash -lc 'ls ~/.claude/skills/ | wc -l'
+    $wslHookCount = wsl bash -lc 'ls ~/.claude/hooks/ | wc -l'
     Write-Host "  WSL: $wslSkillCount skills, $wslHookCount hooks synced." -ForegroundColor Cyan
 } else {
     Write-Host "[9/9] No WSL detected — skipping." -ForegroundColor $dim
