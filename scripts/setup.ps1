@@ -235,6 +235,13 @@ if ($HAS_WSL) {
     wsl bash -lc 'which semgrep || pip3 install semgrep --break-system-packages'
     wsl bash -lc 'which bun || npm install -g bun'
 
+    # Symlink to /usr/local/bin so non-interactive hooks find them
+    Write-Host "  Creating symlinks for hook access..." -ForegroundColor $dim
+    Write-Host "  (may ask for WSL password)" -ForegroundColor DarkYellow
+    wsl -u root ln -sf '$(which semgrep 2>/dev/null || echo /home/$USER/.local/bin/semgrep)' /usr/local/bin/semgrep 2>$null
+    wsl -u root ln -sf '$(which pysemgrep 2>/dev/null || echo /home/$USER/.local/bin/pysemgrep)' /usr/local/bin/pysemgrep 2>$null
+    wsl -u root ln -sf '$(which bun 2>/dev/null || echo /home/$USER/.npm-global/bin/bun)' /usr/local/bin/bun 2>$null
+
     # Fix PATH for non-interactive shells
     wsl bash -lc 'grep -q local/bin ~/.profile || echo "export PATH=\$HOME/.local/bin:\$HOME/.npm-global/bin:\$PATH" >> ~/.profile'
     Write-Host "  WSL dependencies ready." -ForegroundColor Green
