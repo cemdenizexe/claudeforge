@@ -1,34 +1,63 @@
 #!/usr/bin/env node
-/**
- * session-start.js — SessionStart hook (Windows compatible)
- * Replaces bash-based session start that fails on Windows
- */
 const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
 const project = path.basename(process.cwd());
 
-console.log('=== SESSION START ===');
-console.log('[ Project ]', project);
+// ClaudeForge banner
+console.log('');
+console.log('  ⚒️  ClaudeForge active');
 
+// Count installed skills
+const homeDir = process.env.HOME || process.env.USERPROFILE;
+const skillsDir = path.join(homeDir, '.claude', 'skills');
+const hooksDir = path.join(homeDir, '.claude', 'hooks');
+let skillCount = 0;
+let hookCount = 0;
+try {
+    skillCount = fs.readdirSync(skillsDir).filter(f => !f.startsWith('.')).length;
+} catch(e) {}
+try {
+    hookCount = fs.readdirSync(hooksDir).filter(f => f.endsWith('.js') || f.endsWith('.py') || f.endsWith('.sh')).length;
+} catch(e) {}
+
+// Check key components
+const hasGSD = fs.existsSync(path.join(skillsDir, 'gsd-plan'));
+const hasCaveman = fs.existsSync(path.join(skillsDir, 'caveman-skill'));
+const hasSEO = fs.existsSync(path.join(skillsDir, 'claude-seo'));
+const hasLearnings = fs.existsSync(path.join(process.cwd(), '.claude', 'learnings.md'));
+
+let components = [];
+if (hasGSD) components.push('GSD');
+if (hasCaveman) components.push('Caveman');
+if (hasSEO) components.push('SEO');
+components.push(skillCount + ' skills');
+components.push(hookCount + ' hooks');
+
+console.log('  ' + components.join(' · '));
+
+// Git info
 try {
     const branch = execSync('git branch --show-current 2>nul', { encoding: 'utf8' }).trim();
-    console.log('[ Git ]', branch);
     const status = execSync('git status --short 2>nul', { encoding: 'utf8' }).trim();
-    if (status) console.log(status.split('\n').slice(0, 8).join('\n'));
-    const log = execSync('git log --oneline -5 2>nul', { encoding: 'utf8' }).trim();
-    console.log('[ Recent commits ]');
-    console.log(log);
-} catch (e) {
-    console.log('[ Git ] not initialized');
+    const log = execSync('git log --oneline -3 2>nul', { encoding: 'utf8' }).trim();
+    console.log('  Project: ' + project + ' [' + branch + ']');
+    if (status) console.log('  Changes: ' + status.split('\n').length + ' files');
+    if (log) console.log('  Recent: ' + log.split('\n')[0]);
+} catch(e) {
+    console.log('  Project: ' + project + ' [no git]');
 }
 
-const learningsPath = path.join(process.cwd(), '.claude', 'learnings.md');
-if (fs.existsSync(learningsPath)) {
-    const lines = fs.readFileSync(learningsPath, 'utf8').split('\n');
-    console.log('[ Learnings ]');
-    console.log(lines.slice(-10).join('\n'));
+// Learnings
+if (hasLearnings) {
+    try {
+        const lines = fs.readFileSync(path.join(process.cwd(), '.claude', 'learnings.md'), 'utf8')
+            .split('\n').filter(l => l.startsWith('- [')).slice(-3);
+        if (lines.length) {
+            console.log('  Learnings: ' + lines.length + ' entries');
+        }
+    } catch(e) {}
 }
 
-console.log('=== READY ===');
+console.log('');
