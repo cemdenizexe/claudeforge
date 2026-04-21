@@ -23,7 +23,7 @@ try {
 } catch(e) {}
 
 // Check key components
-const hasGSD = fs.existsSync(path.join(skillsDir, 'gsd-plan'));
+const hasGSD = fs.existsSync(path.join(skillsDir, 'gsd-plan-phase'));
 const hasCaveman = fs.existsSync(path.join(skillsDir, 'caveman-skill'));
 const hasSEO = fs.existsSync(path.join(skillsDir, 'claude-seo'));
 const hasLearnings = fs.existsSync(path.join(process.cwd(), '.claude', 'learnings.md'));
@@ -35,7 +35,9 @@ if (hasSEO) components.push('SEO');
 components.push(skillCount + ' skills');
 components.push(hookCount + ' hooks');
 
-console.log('  ' + components.join(' · '));
+console.log('  ' + components.join(' | '));
+console.log('  Tips: $caveman=tokens | codeburn optimize=health | git clone skill=auto-detect');
+console.log('');
 
 // Git info
 try {
