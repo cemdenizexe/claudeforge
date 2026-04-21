@@ -24,8 +24,7 @@ Write-Host ""
 Write-Host "  ------------------------------------------------" -ForegroundColor $dim
 Write-Host ""
 
-# Detect environment
-$IS_WINDOWS = $true
+# ─── Environment Detection ───
 $HOME_DIR = $env:USERPROFILE
 $CLAUDE_DIR = Join-Path $HOME_DIR ".claude"
 $SKILLS_DIR = Join-Path $CLAUDE_DIR "skills"
@@ -33,12 +32,17 @@ $HOOKS_DIR = Join-Path $CLAUDE_DIR "hooks"
 $SCRIPT_ROOT = $PSScriptRoot
 $PARENT_ROOT = Split-Path $SCRIPT_ROOT -Parent
 
+# WSL Detection
+$HAS_WSL = $false
+try { $wslCheck = wsl --list --quiet 2>$null; if ($wslCheck) { $HAS_WSL = $true } } catch {}
+
 Write-Host "  Home      : $HOME_DIR" -ForegroundColor $dim
 Write-Host "  Claude dir: $CLAUDE_DIR" -ForegroundColor $dim
+if ($HAS_WSL) { Write-Host "  WSL       : Detected — will install to both Windows + WSL" -ForegroundColor Cyan }
 Write-Host ""
 
-# Step 1: Prerequisites
-Write-Host "[1/8] Checking prerequisites..." -ForegroundColor Yellow
+# ─── [1/9] Prerequisites ───
+Write-Host "[1/9] Checking prerequisites..." -ForegroundColor Yellow
 $missing = @()
 if (-not (Get-Command "node" -ErrorAction SilentlyContinue)) { $missing += "Node.js" }
 if (-not (Get-Command "git" -ErrorAction SilentlyContinue)) { $missing += "Git" }
@@ -49,9 +53,9 @@ if ($missing.Count -gt 0) {
 }
 Write-Host "  All prerequisites found." -ForegroundColor Green
 
-# Step 2: Configuration
+# ─── [2/9] Configuration ───
 Write-Host ""
-Write-Host "[2/8] Configuration..." -ForegroundColor Yellow
+Write-Host "[2/9] Configuration..." -ForegroundColor Yellow
 $DEV_DIR = Read-Host "  Your projects directory (e.g. D:\Dev, C:\code)"
 if (-not $DEV_DIR) { $DEV_DIR = "D:\Dev" }
 if (-not (Test-Path $DEV_DIR)) {
@@ -64,10 +68,12 @@ $INSTALL_CAVEMAN = Read-Host "  Install Caveman? 65-75% token savings (y/n)"
 if (-not $INSTALL_CAVEMAN) { $INSTALL_CAVEMAN = "y" }
 $INSTALL_VIDEO = Read-Host "  Install video pipeline skills? Seedance/SEO/YouTube (y/n)"
 if (-not $INSTALL_VIDEO) { $INSTALL_VIDEO = "n" }
+$INSTALL_GSD = Read-Host "  Install GSD? 70+ workflow commands + statusbar (y/n)"
+if (-not $INSTALL_GSD) { $INSTALL_GSD = "y" }
 Write-Host ""
 
-# Step 3: Directories
-Write-Host "[3/8] Setting up directories..." -ForegroundColor Yellow
+# ─── [3/9] Directories ───
+Write-Host "[3/9] Setting up directories..." -ForegroundColor Yellow
 foreach ($d in @($CLAUDE_DIR, $SKILLS_DIR, $HOOKS_DIR)) {
     if (-not (Test-Path $d)) { New-Item -Path $d -ItemType Directory -Force | Out-Null }
 }
@@ -75,8 +81,8 @@ $TEMPLATES_DIR = Join-Path $DEV_DIR "_templates"
 if (-not (Test-Path $TEMPLATES_DIR)) { New-Item -Path $TEMPLATES_DIR -ItemType Directory -Force | Out-Null }
 Write-Host "  Directories created." -ForegroundColor Green
 
-# Step 4: Plugins
-Write-Host "[4/8] Installing core plugins..." -ForegroundColor Yellow
+# ─── [4/9] Plugins ───
+Write-Host "[4/9] Installing plugins..." -ForegroundColor Yellow
 $corePlugins = @(
     "security-guidance", "code-review", "playwright", "semgrep",
     "coderabbit", "firecrawl", "github",
@@ -87,15 +93,6 @@ foreach ($p in $corePlugins) {
     & claude plugin install "${p}@claude-plugins-official" 2>$null
     Write-Host " ok" -ForegroundColor Green
 }
-
-# GSD (Get Shit Done) — workflow engine
-$installGSD = Read-Host "  Install GSD? 70+ workflow commands + statusbar (y/n)"
-if ($installGSD -eq 'y') {
-    Write-Host "  Installing GSD..." -ForegroundColor $dim
-    npx get-shit-done-cc@latest --claude --global 2>$null
-    Write-Host "  GSD installed." -ForegroundColor Green
-}
-
 Write-Host "  Marketplace plugins..." -ForegroundColor $dim
 & claude plugin marketplace add "thedotmack/claude-mem" 2>$null
 & claude plugin install "claude-mem@thedotmack" 2>$null
@@ -110,9 +107,10 @@ Write-Host "  Marketplace plugins..." -ForegroundColor $dim
 & claude plugin install "example-skills@anthropic-agent-skills" 2>$null
 Write-Host "  16 plugins installed." -ForegroundColor Green
 
-# Step 5: Skills
-Write-Host "[5/8] Installing skills..." -ForegroundColor Yellow
+# ─── [5/9] Skills (Windows) ───
+Write-Host "[5/9] Installing skills..." -ForegroundColor Yellow
 $coreSkills = [System.Collections.ArrayList]@()
+[void]$coreSkills.Add(@{ name = "awesome-design-md"; repo = "https://github.com/VoltAgent/awesome-design-md.git" })
 if ($INSTALL_CAVEMAN -eq 'y') {
     [void]$coreSkills.Add(@{ name = "caveman-skill"; repo = "https://github.com/JuliusBrussee/caveman.git" })
 }
@@ -132,10 +130,15 @@ foreach ($s in $coreSkills) {
         Write-Host "  $($s.name) exists." -ForegroundColor $dim
     }
 }
+if ($INSTALL_GSD -eq 'y') {
+    Write-Host "  GSD workflow..." -ForegroundColor $dim
+    npx get-shit-done-cc@latest --claude --global 2>$null
+    Write-Host "  GSD installed." -ForegroundColor Green
+}
 Write-Host "  Skills installed." -ForegroundColor Green
 
-# Step 6: Hooks
-Write-Host "[6/8] Installing hooks..." -ForegroundColor Yellow
+# ─── [6/9] Hooks ───
+Write-Host "[6/9] Installing hooks..." -ForegroundColor Yellow
 $hookSource = Join-Path $PARENT_ROOT "templates"
 foreach ($hook in @("sensitive-file-guard.js", "self-learning.js", "skill-discovery.js", "session-start.js", "update-check.js")) {
     $src = Join-Path $hookSource $hook
@@ -146,12 +149,11 @@ foreach ($hook in @("sensitive-file-guard.js", "self-learning.js", "skill-discov
     }
 }
 
-# Step 7: Global CLAUDE.md
-Write-Host "[7/8] Generating Global CLAUDE.md..." -ForegroundColor Yellow
+# ─── [7/9] Global CLAUDE.md ───
+Write-Host "[7/9] Generating Global CLAUDE.md..." -ForegroundColor Yellow
 $globalMd = Join-Path $CLAUDE_DIR "CLAUDE.md"
 $templateMd = Join-Path (Join-Path $PARENT_ROOT "templates") "CLAUDE-template.md"
 $skipClaude = $false
-
 if (Test-Path $globalMd) {
     $overwrite = Read-Host "  Global CLAUDE.md exists. Overwrite? (y/n)"
     if ($overwrite -ne 'y') {
@@ -159,7 +161,6 @@ if (Test-Path $globalMd) {
         $skipClaude = $true
     }
 }
-
 if (-not $skipClaude) {
     if (Test-Path $templateMd) {
         $content = Get-Content $templateMd -Raw
@@ -173,28 +174,23 @@ if (-not $skipClaude) {
         Set-Content -Path $globalMd -Value $content -Encoding UTF8
         Write-Host "  Global CLAUDE.md created for $USER_NAME." -ForegroundColor Green
     } else {
-        $fallback = Join-Path $PARENT_ROOT "templates" "CLAUDE.md"
-        if (Test-Path $fallback) {
-            Copy-Item -Path $fallback -Destination $globalMd -Force
-        }
+        $fallback = Join-Path (Join-Path $PARENT_ROOT "templates") "CLAUDE.md"
+        if (Test-Path $fallback) { Copy-Item -Path $fallback -Destination $globalMd -Force }
         Write-Host "  Global CLAUDE.md copied (default)." -ForegroundColor DarkYellow
     }
 }
 
-# Step 8: Templates + CodeBurn + Dependencies
-Write-Host "[8/8] Setting up templates and dependencies..." -ForegroundColor Yellow
+# ─── [8/9] Dependencies + Templates ───
+Write-Host "[8/9] Dependencies and templates..." -ForegroundColor Yellow
 foreach ($f in @("start.ps1", "ecosystem-awareness.md", ".claudeignore")) {
     $src = Join-Path (Join-Path $PARENT_ROOT "templates") $f
     $dst = Join-Path $TEMPLATES_DIR $f
     if (Test-Path $src) { Copy-Item -Path $src -Destination $dst -Force }
 }
-
-# CodeBurn
 Write-Host "  CodeBurn..." -ForegroundColor $dim -NoNewline
 npm install -g codeburn 2>$null
 Write-Host " ok" -ForegroundColor Green
 
-# Semgrep (required by semgrep plugin)
 if (-not (Get-Command "semgrep" -ErrorAction SilentlyContinue)) {
     $installSemgrep = Read-Host "  Semgrep not found. Install for security scanning? (y/n)"
     if ($installSemgrep -eq 'y') {
@@ -202,21 +198,56 @@ if (-not (Get-Command "semgrep" -ErrorAction SilentlyContinue)) {
         pip install semgrep --break-system-packages 2>$null
         if (-not $?) { python -m pip install semgrep 2>$null }
     }
-} else {
-    Write-Host "  Semgrep found." -ForegroundColor Green
-}
+} else { Write-Host "  Semgrep found." -ForegroundColor Green }
 
-# Bun (optional, some plugins use it)
 if (-not (Get-Command "bun" -ErrorAction SilentlyContinue)) {
     $installBun = Read-Host "  Bun not found. Install? Some plugins use it. (y/n)"
-    if ($installBun -eq 'y') {
-        Write-Host "  Installing bun..." -ForegroundColor $dim
-        npm install -g bun 2>$null
-    }
+    if ($installBun -eq 'y') { npm install -g bun 2>$null }
+} else { Write-Host "  Bun found." -ForegroundColor Green }
+
+# ─── [9/9] WSL Mirror ───
+if ($HAS_WSL) {
+    Write-Host "[9/9] Syncing to WSL..." -ForegroundColor Yellow
+    Write-Host "  Claude Code uses WSL — mirroring skills, hooks, and dependencies..." -ForegroundColor $dim
+
+    # Create WSL .claude directories
+    wsl bash -c "mkdir -p ~/.claude/skills ~/.claude/hooks" 2>$null
+
+    # Mirror skills
+    Write-Host "  Mirroring skills..." -ForegroundColor $dim
+    $winSkills = Join-Path $SKILLS_DIR "*"
+    wsl bash -c "cp -r /mnt/c/Users/$($env:USERNAME)/.claude/skills/* ~/.claude/skills/ 2>/dev/null" 2>$null
+    Write-Host "  Skills mirrored to WSL." -ForegroundColor Green
+
+    # Mirror hooks
+    Write-Host "  Mirroring hooks..." -ForegroundColor $dim
+    wsl bash -c "cp /mnt/c/Users/$($env:USERNAME)/.claude/hooks/*.js ~/.claude/hooks/ 2>/dev/null" 2>$null
+    wsl bash -c "cp /mnt/c/Users/$($env:USERNAME)/.claude/hooks/*.py ~/.claude/hooks/ 2>/dev/null" 2>$null
+    wsl bash -c "cp /mnt/c/Users/$($env:USERNAME)/.claude/hooks/*.sh ~/.claude/hooks/ 2>/dev/null" 2>$null
+    Write-Host "  Hooks mirrored to WSL." -ForegroundColor Green
+
+    # Mirror CLAUDE.md
+    wsl bash -c "cp /mnt/c/Users/$($env:USERNAME)/.claude/CLAUDE.md ~/.claude/CLAUDE.md 2>/dev/null" 2>$null
+    Write-Host "  CLAUDE.md mirrored to WSL." -ForegroundColor Green
+
+    # Install dependencies in WSL
+    Write-Host "  Installing WSL dependencies..." -ForegroundColor $dim
+    wsl bash -c "command -v semgrep >/dev/null 2>&1 || (sudo apt-get install -y python3-pip >/dev/null 2>&1; pip3 install semgrep --break-system-packages >/dev/null 2>&1)" 2>$null
+    wsl bash -c "command -v bun >/dev/null 2>&1 || npm install -g bun >/dev/null 2>&1" 2>$null
+
+    # Fix PATH for non-interactive shells (hooks run as non-interactive)
+    wsl bash -c "grep -q '.local/bin' ~/.profile 2>/dev/null || echo 'export PATH=\"\$HOME/.local/bin:\$HOME/.npm-global/bin:\$PATH\"' >> ~/.profile" 2>$null
+    Write-Host "  WSL dependencies ready." -ForegroundColor Green
+
+    # Report
+    $wslSkillCount = wsl bash -c "ls ~/.claude/skills/ 2>/dev/null | wc -l" 2>$null
+    $wslHookCount = wsl bash -c "ls ~/.claude/hooks/ 2>/dev/null | wc -l" 2>$null
+    Write-Host "  WSL: $wslSkillCount skills, $wslHookCount hooks synced." -ForegroundColor Cyan
 } else {
-    Write-Host "  Bun found." -ForegroundColor Green
+    Write-Host "[9/9] No WSL detected — skipping." -ForegroundColor $dim
 }
 
+# ─── Complete ───
 Write-Host ""
 Write-Host "  ================================================" -ForegroundColor $accent
 Write-Host "   ClaudeForge setup complete!" -ForegroundColor Green
@@ -224,11 +255,14 @@ Write-Host "  ================================================" -ForegroundColor
 Write-Host ""
 Write-Host "  Installed:" -ForegroundColor White
 Write-Host "    Plugins     16 (zero redundancy)" -ForegroundColor $dim
-Write-Host "    Skills      $($coreSkills.Count) cloned + 70 GSD + plugin bundles = 200+ total" -ForegroundColor $dim
-Write-Host "    Hooks       sensitive-file-guard, self-learning, skill-discovery" -ForegroundColor $dim
+Write-Host "    Skills      $($coreSkills.Count) cloned + GSD + plugin bundles" -ForegroundColor $dim
+Write-Host "    Hooks       session-start, sensitive-file-guard, self-learning, skill-discovery, update-check" -ForegroundColor $dim
 Write-Host '    Workflow    GSD (70+ cmds, auto-enforced phases)' -ForegroundColor $dim
 Write-Host "    Config      Global CLAUDE.md with Skill Activation Guide" -ForegroundColor $dim
 Write-Host "    Dashboard   CodeBurn (npx codeburn)" -ForegroundColor $dim
+if ($HAS_WSL) {
+    Write-Host "    WSL         All skills, hooks, deps mirrored" -ForegroundColor Cyan
+}
 Write-Host ""
 Write-Host "  Quick start:" -ForegroundColor White
 Write-Host "    cd $DEV_DIR\[your-project]" -ForegroundColor $dim
@@ -238,5 +272,6 @@ if ($INSTALL_CAVEMAN -eq 'y') {
     Write-Host '    Type $caveman to save 65-75% tokens' -ForegroundColor $dim
 }
 Write-Host ""
-Write-Host "  Docs:  https://github.com/cemdenizexe/claudeforge" -ForegroundColor $dim
+Write-Host "  Health check: npx codeburn optimize" -ForegroundColor $dim
+Write-Host "  Docs: https://github.com/cemdenizexe/claudeforge" -ForegroundColor $dim
 Write-Host ""
