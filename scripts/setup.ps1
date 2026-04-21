@@ -128,7 +128,7 @@ Write-Host "  Skills installed." -ForegroundColor Green
 # Step 6: Hooks
 Write-Host "[6/8] Installing hooks..." -ForegroundColor Yellow
 $hookSource = Join-Path $PARENT_ROOT "templates"
-foreach ($hook in @("sensitive-file-guard.js", "self-learning.js", "skill-discovery.js", "session-start.js")) {
+foreach ($hook in @("sensitive-file-guard.js", "self-learning.js", "skill-discovery.js", "session-start.js", "update-check.js")) {
     $src = Join-Path $hookSource $hook
     $dst = Join-Path $HOOKS_DIR $hook
     if (Test-Path $src) {
