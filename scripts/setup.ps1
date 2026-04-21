@@ -172,15 +172,41 @@ if (-not $skipClaude) {
     }
 }
 
-# Step 8: Templates + CodeBurn
-Write-Host "[8/8] Setting up templates..." -ForegroundColor Yellow
+# Step 8: Templates + CodeBurn + Dependencies
+Write-Host "[8/8] Setting up templates and dependencies..." -ForegroundColor Yellow
 foreach ($f in @("start.ps1", "ecosystem-awareness.md", ".claudeignore")) {
     $src = Join-Path (Join-Path $PARENT_ROOT "templates") $f
     $dst = Join-Path $TEMPLATES_DIR $f
     if (Test-Path $src) { Copy-Item -Path $src -Destination $dst -Force }
 }
-Write-Host "  Installing CodeBurn..." -ForegroundColor $dim
+
+# CodeBurn
+Write-Host "  CodeBurn..." -ForegroundColor $dim -NoNewline
 npm install -g codeburn 2>$null
+Write-Host " ok" -ForegroundColor Green
+
+# Semgrep (required by semgrep plugin)
+if (-not (Get-Command "semgrep" -ErrorAction SilentlyContinue)) {
+    $installSemgrep = Read-Host "  Semgrep not found. Install for security scanning? (y/n)"
+    if ($installSemgrep -eq 'y') {
+        Write-Host "  Installing semgrep..." -ForegroundColor $dim
+        pip install semgrep --break-system-packages 2>$null
+        if (-not $?) { python -m pip install semgrep 2>$null }
+    }
+} else {
+    Write-Host "  Semgrep found." -ForegroundColor Green
+}
+
+# Bun (optional, some plugins use it)
+if (-not (Get-Command "bun" -ErrorAction SilentlyContinue)) {
+    $installBun = Read-Host "  Bun not found. Install? Some plugins use it. (y/n)"
+    if ($installBun -eq 'y') {
+        Write-Host "  Installing bun..." -ForegroundColor $dim
+        npm install -g bun 2>$null
+    }
+} else {
+    Write-Host "  Bun found." -ForegroundColor Green
+}
 
 Write-Host ""
 Write-Host "  ================================================" -ForegroundColor $accent
