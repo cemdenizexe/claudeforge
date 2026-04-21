@@ -6,7 +6,7 @@ Write-Host ""
 Write-Host "   _____ _                 _      ______                    " -ForegroundColor $accent
 Write-Host "  / ____| |               | |    |  ____|                   " -ForegroundColor $accent
 Write-Host " | |    | | __ _ _   _  __| | ___| |__ ___  _ __ __ _  ___ " -ForegroundColor $accent
-Write-Host " | |    | |/ _`` | | | |/ _`` |/ _ \  __/ _ \| '__/ _`` |/ _ \" -ForegroundColor $accent
+Write-Host " | |    | |/ _   | | | |/ _  |/ _ \  __/ _ \| '__/ _  |/ _ \" -ForegroundColor $accent
 Write-Host " | |____| | (_| | |_| | (_| |  __/ | | (_) | | | (_| |  __/" -ForegroundColor $accent
 Write-Host "  \_____|_|\__,_|\__,_|\__,_|\___|_|  \___/|_|  \__, |\___|" -ForegroundColor $accent
 Write-Host "                                                  __/ |    " -ForegroundColor $accent
@@ -103,17 +103,15 @@ Write-Host "  16 plugins installed." -ForegroundColor Green
 
 # Step 5: Skills
 Write-Host "[5/8] Installing skills..." -ForegroundColor Yellow
-$coreSkills = @()
+$coreSkills = [System.Collections.ArrayList]@()
 if ($INSTALL_CAVEMAN -eq 'y') {
-    $coreSkills += @{ name = "caveman-skill"; repo = "https://github.com/JuliusBrussee/caveman.git" }
+    [void]$coreSkills.Add(@{ name = "caveman-skill"; repo = "https://github.com/JuliusBrussee/caveman.git" })
 }
 if ($INSTALL_VIDEO -eq 'y') {
-    $coreSkills += @(
-        @{ name = "claude-seo"; repo = "https://github.com/AgriciDaniel/claude-seo.git" },
-        @{ name = "claude-youtube"; repo = "https://github.com/AgriciDaniel/claude-youtube.git" },
-        @{ name = "marketingskills"; repo = "https://github.com/coreyhaines31/marketingskills.git" },
-        @{ name = "seedance2-skill"; repo = "https://github.com/dexhunter/seedance2-skill.git" }
-    )
+    [void]$coreSkills.Add(@{ name = "claude-seo"; repo = "https://github.com/AgriciDaniel/claude-seo.git" })
+    [void]$coreSkills.Add(@{ name = "claude-youtube"; repo = "https://github.com/AgriciDaniel/claude-youtube.git" })
+    [void]$coreSkills.Add(@{ name = "marketingskills"; repo = "https://github.com/coreyhaines31/marketingskills.git" })
+    [void]$coreSkills.Add(@{ name = "seedance2-skill"; repo = "https://github.com/dexhunter/seedance2-skill.git" })
 }
 foreach ($s in $coreSkills) {
     $dest = Join-Path $SKILLS_DIR $s.name
