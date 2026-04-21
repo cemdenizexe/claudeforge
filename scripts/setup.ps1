@@ -140,7 +140,7 @@ foreach ($hook in @("sensitive-file-guard.js", "self-learning.js", "skill-discov
 # Step 7: Global CLAUDE.md
 Write-Host "[7/8] Generating Global CLAUDE.md..." -ForegroundColor Yellow
 $globalMd = Join-Path $CLAUDE_DIR "CLAUDE.md"
-$templateMd = Join-Path $PARENT_ROOT "templates" "CLAUDE-template.md"
+$templateMd = Join-Path (Join-Path $PARENT_ROOT "templates") "CLAUDE-template.md"
 $skipClaude = $false
 
 if (Test-Path $globalMd) {
@@ -175,7 +175,7 @@ if (-not $skipClaude) {
 # Step 8: Templates + CodeBurn
 Write-Host "[8/8] Setting up templates..." -ForegroundColor Yellow
 foreach ($f in @("start.ps1", "ecosystem-awareness.md", ".claudeignore")) {
-    $src = Join-Path $PARENT_ROOT "templates" $f
+    $src = Join-Path (Join-Path $PARENT_ROOT "templates") $f
     $dst = Join-Path $TEMPLATES_DIR $f
     if (Test-Path $src) { Copy-Item -Path $src -Destination $dst -Force }
 }
