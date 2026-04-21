@@ -84,7 +84,7 @@ Write-Host "  Directories created." -ForegroundColor Green
 # --- [4/9] Plugins ---
 Write-Host "[4/9] Installing plugins..." -ForegroundColor Yellow
 $corePlugins = @(
-    "security-guidance", "code-review", "playwright", "semgrep",
+    "security-guidance", "code-review", "playwright",
     "coderabbit", "firecrawl", "github",
     "chrome-devtools-mcp", "code-simplifier", "huggingface-skills"
 )
@@ -191,15 +191,6 @@ Write-Host "  CodeBurn..." -ForegroundColor $dim -NoNewline
 npm install -g codeburn 2>$null
 Write-Host " ok" -ForegroundColor Green
 
-if (-not (Get-Command "semgrep" -ErrorAction SilentlyContinue)) {
-    $installSemgrep = Read-Host "  Semgrep not found. Install for security scanning? (y/n)"
-    if ($installSemgrep -eq 'y') {
-        Write-Host "  Installing semgrep..." -ForegroundColor $dim
-        pip install semgrep --break-system-packages 2>$null
-        if (-not $?) { python -m pip install semgrep 2>$null }
-    }
-} else { Write-Host "  Semgrep found." -ForegroundColor Green }
-
 if (-not (Get-Command "bun" -ErrorAction SilentlyContinue)) {
     $installBun = Read-Host "  Bun not found. Install? Some plugins use it. (y/n)"
     if ($installBun -eq 'y') { npm install -g bun 2>$null }
@@ -232,14 +223,10 @@ if ($HAS_WSL) {
 
     # Install dependencies in WSL
     Write-Host "  Installing WSL dependencies..." -ForegroundColor $dim
-    wsl bash -lc 'which semgrep || pip3 install semgrep --break-system-packages'
     wsl bash -lc 'which bun || npm install -g bun'
 
     # Symlink to /usr/local/bin so non-interactive hooks find them
     Write-Host "  Creating symlinks for hook access..." -ForegroundColor $dim
-    Write-Host "  (may ask for WSL password)" -ForegroundColor DarkYellow
-    wsl -u root ln -sf '$(which semgrep 2>/dev/null || echo /home/$USER/.local/bin/semgrep)' /usr/local/bin/semgrep 2>$null
-    wsl -u root ln -sf '$(which pysemgrep 2>/dev/null || echo /home/$USER/.local/bin/pysemgrep)' /usr/local/bin/pysemgrep 2>$null
     wsl -u root ln -sf '$(which bun 2>/dev/null || echo /home/$USER/.npm-global/bin/bun)' /usr/local/bin/bun 2>$null
 
     # Fix PATH for non-interactive shells
