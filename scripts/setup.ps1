@@ -87,6 +87,15 @@ foreach ($p in $corePlugins) {
     & claude plugin install "${p}@claude-plugins-official" 2>$null
     Write-Host " ok" -ForegroundColor Green
 }
+
+# GSD (Get Shit Done) — workflow engine
+$installGSD = Read-Host "  Install GSD? 70+ workflow commands + statusbar (y/n)"
+if ($installGSD -eq 'y') {
+    Write-Host "  Installing GSD..." -ForegroundColor $dim
+    npx get-shit-done-cc@latest --claude --global 2>$null
+    Write-Host "  GSD installed." -ForegroundColor Green
+}
+
 Write-Host "  Marketplace plugins..." -ForegroundColor $dim
 & claude plugin marketplace add "thedotmack/claude-mem" 2>$null
 & claude plugin install "claude-mem@thedotmack" 2>$null
