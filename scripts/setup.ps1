@@ -157,7 +157,7 @@ if (-not $skipClaude) {
         $content = $content.Replace("{{USER_NAME}}", $USER_NAME)
         $content = $content.Replace("{{DEV_DIR}}", $DEV_DIR)
         if ($INSTALL_CAVEMAN -eq 'y') {
-            $content = $content.Replace("{{CAVEMAN}}", "- **Caveman** — token 65-75pct reduction. Type dollarsign-caveman to activate.")
+            $content = $content.Replace("{{CAVEMAN}}", "- Caveman - token 65-75 percent reduction. Type dollar-caveman to activate.")
         } else {
             $content = $content.Replace("{{CAVEMAN}}", "")
         }
@@ -191,7 +191,7 @@ Write-Host "  Installed:" -ForegroundColor White
 Write-Host "    Plugins     16 (zero redundancy)" -ForegroundColor $dim
 Write-Host "    Skills      $($coreSkills.Count) cloned + 70 GSD + plugin bundles = 200+ total" -ForegroundColor $dim
 Write-Host "    Hooks       sensitive-file-guard, self-learning, skill-discovery" -ForegroundColor $dim
-Write-Host "    Workflow    GSD (70+ commands, auto-enforced phases)" -ForegroundColor $dim
+Write-Host '    Workflow    GSD (70+ cmds, auto-enforced phases)' -ForegroundColor $dim
 Write-Host "    Config      Global CLAUDE.md with Skill Activation Guide" -ForegroundColor $dim
 Write-Host "    Dashboard   CodeBurn (npx codeburn)" -ForegroundColor $dim
 Write-Host ""
