@@ -38,7 +38,7 @@ try { $wslCheck = wsl --list --quiet 2>$null; if ($wslCheck) { $HAS_WSL = $true 
 
 Write-Host "  Home      : $HOME_DIR" -ForegroundColor $dim
 Write-Host "  Claude dir: $CLAUDE_DIR" -ForegroundColor $dim
-if ($HAS_WSL) { Write-Host "  WSL       : Detected — will install to both Windows + WSL" -ForegroundColor Cyan }
+if ($HAS_WSL) { Write-Host "  WSL       : Detected - will install to both Windows and WSL" -ForegroundColor Cyan }
 Write-Host ""
 
 # ─── [1/9] Prerequisites ───
@@ -269,7 +269,7 @@ Write-Host "    cd $DEV_DIR\[your-project]" -ForegroundColor $dim
 Write-Host "    claude" -ForegroundColor $dim
 Write-Host '    Paste: "Read CLAUDE.md. Run git status. Report status."' -ForegroundColor $dim
 if ($INSTALL_CAVEMAN -eq 'y') {
-    Write-Host '    Type $caveman to save 65-75% tokens' -ForegroundColor $dim
+    Write-Host '    Type $caveman to save tokens' -ForegroundColor $dim
 }
 Write-Host ""
 Write-Host "  Health check: npx codeburn optimize" -ForegroundColor $dim
