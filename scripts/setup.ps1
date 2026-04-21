@@ -24,7 +24,7 @@ Write-Host ""
 Write-Host "  ------------------------------------------------" -ForegroundColor $dim
 Write-Host ""
 
-# ─── Environment Detection ───
+# --- Environment Detection ---
 $HOME_DIR = $env:USERPROFILE
 $CLAUDE_DIR = Join-Path $HOME_DIR ".claude"
 $SKILLS_DIR = Join-Path $CLAUDE_DIR "skills"
@@ -41,7 +41,7 @@ Write-Host "  Claude dir: $CLAUDE_DIR" -ForegroundColor $dim
 if ($HAS_WSL) { Write-Host "  WSL       : Detected - will install to both Windows and WSL" -ForegroundColor Cyan }
 Write-Host ""
 
-# ─── [1/9] Prerequisites ───
+# --- [1/9] Prerequisites ---
 Write-Host "[1/9] Checking prerequisites..." -ForegroundColor Yellow
 $missing = @()
 if (-not (Get-Command "node" -ErrorAction SilentlyContinue)) { $missing += "Node.js" }
@@ -53,7 +53,7 @@ if ($missing.Count -gt 0) {
 }
 Write-Host "  All prerequisites found." -ForegroundColor Green
 
-# ─── [2/9] Configuration ───
+# --- [2/9] Configuration ---
 Write-Host ""
 Write-Host "[2/9] Configuration..." -ForegroundColor Yellow
 $DEV_DIR = Read-Host "  Your projects directory (e.g. D:\Dev, C:\code)"
@@ -72,7 +72,7 @@ $INSTALL_GSD = Read-Host "  Install GSD? 70+ workflow commands + statusbar (y/n)
 if (-not $INSTALL_GSD) { $INSTALL_GSD = "y" }
 Write-Host ""
 
-# ─── [3/9] Directories ───
+# --- [3/9] Directories ---
 Write-Host "[3/9] Setting up directories..." -ForegroundColor Yellow
 foreach ($d in @($CLAUDE_DIR, $SKILLS_DIR, $HOOKS_DIR)) {
     if (-not (Test-Path $d)) { New-Item -Path $d -ItemType Directory -Force | Out-Null }
@@ -81,7 +81,7 @@ $TEMPLATES_DIR = Join-Path $DEV_DIR "_templates"
 if (-not (Test-Path $TEMPLATES_DIR)) { New-Item -Path $TEMPLATES_DIR -ItemType Directory -Force | Out-Null }
 Write-Host "  Directories created." -ForegroundColor Green
 
-# ─── [4/9] Plugins ───
+# --- [4/9] Plugins ---
 Write-Host "[4/9] Installing plugins..." -ForegroundColor Yellow
 $corePlugins = @(
     "security-guidance", "code-review", "playwright", "semgrep",
@@ -107,7 +107,7 @@ Write-Host "  Marketplace plugins..." -ForegroundColor $dim
 & claude plugin install "example-skills@anthropic-agent-skills" 2>$null
 Write-Host "  16 plugins installed." -ForegroundColor Green
 
-# ─── [5/9] Skills (Windows) ───
+# --- [5/9] Skills ---
 Write-Host "[5/9] Installing skills..." -ForegroundColor Yellow
 $coreSkills = [System.Collections.ArrayList]@()
 [void]$coreSkills.Add(@{ name = "awesome-design-md"; repo = "https://github.com/VoltAgent/awesome-design-md.git" })
@@ -137,7 +137,7 @@ if ($INSTALL_GSD -eq 'y') {
 }
 Write-Host "  Skills installed." -ForegroundColor Green
 
-# ─── [6/9] Hooks ───
+# --- [6/9] Hooks ---
 Write-Host "[6/9] Installing hooks..." -ForegroundColor Yellow
 $hookSource = Join-Path $PARENT_ROOT "templates"
 foreach ($hook in @("sensitive-file-guard.js", "self-learning.js", "skill-discovery.js", "session-start.js", "update-check.js")) {
@@ -149,7 +149,7 @@ foreach ($hook in @("sensitive-file-guard.js", "self-learning.js", "skill-discov
     }
 }
 
-# ─── [7/9] Global CLAUDE.md ───
+# --- [7/9] Global CLAUDE.md ---
 Write-Host "[7/9] Generating Global CLAUDE.md..." -ForegroundColor Yellow
 $globalMd = Join-Path $CLAUDE_DIR "CLAUDE.md"
 $templateMd = Join-Path (Join-Path $PARENT_ROOT "templates") "CLAUDE-template.md"
@@ -180,7 +180,7 @@ if (-not $skipClaude) {
     }
 }
 
-# ─── [8/9] Dependencies + Templates ───
+# --- [8/9] Dependencies + Templates ---
 Write-Host "[8/9] Dependencies and templates..." -ForegroundColor Yellow
 foreach ($f in @("start.ps1", "ecosystem-awareness.md", ".claudeignore")) {
     $src = Join-Path (Join-Path $PARENT_ROOT "templates") $f
@@ -205,7 +205,7 @@ if (-not (Get-Command "bun" -ErrorAction SilentlyContinue)) {
     if ($installBun -eq 'y') { npm install -g bun 2>$null }
 } else { Write-Host "  Bun found." -ForegroundColor Green }
 
-# ─── [9/9] WSL Mirror ───
+# --- [9/9] WSL Mirror ---
 if ($HAS_WSL) {
     Write-Host "[9/9] Syncing to WSL..." -ForegroundColor Yellow
     Write-Host "  Claude Code uses WSL - mirroring skills, hooks, and dependencies..." -ForegroundColor $dim
@@ -244,10 +244,10 @@ if ($HAS_WSL) {
     $wslHookCount = wsl bash -lc 'ls ~/.claude/hooks/ | wc -l'
     Write-Host "  WSL: $wslSkillCount skills, $wslHookCount hooks synced." -ForegroundColor Cyan
 } else {
-    Write-Host "[9/9] No WSL detected — skipping." -ForegroundColor $dim
+    Write-Host "[9/9] No WSL detected - skipping." -ForegroundColor $dim
 }
 
-# ─── Complete ───
+# --- Complete ---
 Write-Host ""
 Write-Host "  ================================================" -ForegroundColor $accent
 Write-Host "   ClaudeForge setup complete!" -ForegroundColor Green
