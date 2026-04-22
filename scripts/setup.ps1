@@ -312,3 +312,23 @@ Write-Host "  .\start.ps1 -- calistir. Bootstrap yapistir. Calis." -ForegroundCo
 Write-Host ""
 Write-Host "  Az token. Guvenli kod. Hizli is." -ForegroundColor Green
 Write-Host ""
+Write-Host "  ================================================" -ForegroundColor $accent
+Write-Host "  BASLANGIC PROMPTLARI" -ForegroundColor White
+Write-Host "  ================================================" -ForegroundColor $accent
+Write-Host ""
+Write-Host "  Claude Code icin (.\start.ps1 sonrasi yapistir):" -ForegroundColor Yellow
+Write-Host "  +----------------------------------------------------------+" -ForegroundColor Cyan
+Write-Host "  | Read CLAUDE.md fully. Read .claude/learnings.md.        |" -ForegroundColor White
+Write-Host "  | Run: git status && git log --oneline -5                  |" -ForegroundColor White
+Write-Host "  | GSD: phase? active task? next action? Report. Go.       |" -ForegroundColor White
+Write-Host "  +----------------------------------------------------------+" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "  Claude Desktop / claude.ai icin:" -ForegroundColor Yellow
+Write-Host "  +----------------------------------------------------------+" -ForegroundColor Cyan
+Write-Host "  | Read CLAUDE.md. List active skills, hooks, GSD status.  |" -ForegroundColor White
+Write-Host "  | Confirm ClaudeForge is active. Report what you see.     |" -ForegroundColor White
+Write-Host "  +----------------------------------------------------------+" -ForegroundColor Cyan
+Write-Host ""
+$ccPrompt = "Read CLAUDE.md fully. Read .claude/learnings.md if exists. Run: git status && git log --oneline -5. GSD: What phase am I in? What is the active task? Exact next action? Report all. No clarifying questions. Start immediately."
+try { $ccPrompt | Set-Clipboard; Write-Host "  (Claude Code promptu clipboard'a kopyalandi)" -ForegroundColor Green } catch {}
+Write-Host ""

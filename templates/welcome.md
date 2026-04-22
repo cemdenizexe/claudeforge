@@ -1,95 +1,119 @@
-# Welcome to ClaudeForge
+# ClaudeForge — Hoşgeldin / Welcome
 
-ClaudeForge kuruldu. Artık Claude sadece bir chatbot değil — projenizi tanıyan,
-güvenliği otomatik kontrol eden, geçmişi hatırlayan bir geliştirici ortamı.
-
----
-
-## Ne kuruldu?
-
-**GSD Workflow** — Plan, execute, review, ship. 70+ komut.
-Nasıl kullanılır: `gsd plan` yazın. Claude bir sprint planı çıkarır.
-
-**Caveman Modu** — Her token para demek. Caveman %65-75 azaltır.
-Nasıl kullanılır: `$caveman` yazın. Kısa, öz, verimli yanıtlar gelir.
-Kapatmak için: Yeni session açın veya `$caveman off` yazın.
-
-**Güvenlik Taraması** — Her dosya düzenlemesinde otomatik çalışır.
-.env commit edilmesini engeller. XSS ve injection açıklarını yakalar.
-Bir şey yapmanıza gerek yok — kendiliğinden çalışır.
-
-**Session Hafızası** — claude-mem geçmiş kararlarınızı ve hatalarınızı saklar.
-Bir sonraki session'da Claude öncekini bilir.
-Dashboard: `http://localhost:37777`
-
-**Status Bar** — Alt satırda sürekli görünür:
-`5h[███38%░░░░]⏰2h14m | 7d[███87%░░░░]⏰3d05h | Opus 4.7(51k/200k)`
-- 5h: 5 saatlik kullanım limiti ve sıfırlanma süresi
-- 7d: 7 günlük kullanım limiti
-- Son kısım: Model, kullanılan token / toplam limit
+ClaudeForge kuruldu. Claude artık daha güçlü — projelerinizi tanır, hatalarınızı hatırlar, güvenliği otomatik kontrol eder.
 
 ---
 
-## Maliyet düşürme
+## Claude Code Başlangıç Promptu
 
-Claude Code kullanımınız token harcar. Bunu azaltmanın yolları:
+Her yeni session'da `.\start.ps1` çalıştırın, açılan Claude Code'a şunu yapıştırın:
 
-1. **`$caveman`** — Her session başında yazın. En büyük tasarruf buradan.
-2. **`/compact`** — Context %70'i geçince yazın. Temizler, devam eder.
-3. **`/model`** — Basit görevler için haiku seçin. Opus'un 1/10 fiyatı.
-4. **`npx codeburn`** — Haftalık rapor. Nereye para gittiğini görün.
+```
+Read CLAUDE.md fully. Read .claude/learnings.md if exists.
+Run: git status && git log --oneline -5
+GSD: What phase am I in? What is the active task? Exact next action?
+Report all. No clarifying questions. Start immediately.
+```
+
+Bu prompt Claude'a şunları yaptırır:
+- Proje kurallarını okur
+- Geçmiş hataları hatırlar  
+- Git durumunu kontrol eder
+- Bir sonraki görevi raporlar
 
 ---
 
-## Doğru prompt verme
+## Claude Desktop / claude.ai Başlangıç Promptu
 
-**Verimsiz:**
-```
-Bu projeyi analiz et, hataları bul, düzelt, test yaz, dökümantasyon ekle, deploy et
-```
-→ Claude her şeyi yapmaya çalışır, fazla token harcar, sonuç karmaşık çıkar.
+claude.ai veya Claude Desktop'ta ilk kez kullanırken şunu verin:
 
-**Verimli:**
 ```
-Fix the null check bug in auth.js
+Read CLAUDE.md. List active skills, hooks, and GSD status.
+Confirm ClaudeForge is active. Report what you see.
 ```
-→ Tek iş. Net hedef. Hızlı çözüm.
+
+Sonrasında her konuşmada proje bağlamını vermek için:
+
+```
+I'm working on [proje adı]. 
+Active branch: [branch adı].
+Current task: [ne yapıyorsunuz].
+Apply ClaudeForge rules.
+```
 
 ---
 
-## Skill tetikleme
+## Kurulu Özellikler
 
-Claude'a şu ifadeleri söyleyin, ilgili skill otomatik devreye girer:
+**GSD Workflow** — Günlük iş akışı motoru
+```
+gsd plan        → Sprint planla
+gsd execute     → Göreve başla  
+gsd review      → Kodu gözden geçir
+gsd ship        → Deploy et
+gsd debug       → Hata ayıkla
+```
 
-| Ne söylersiniz | Ne olur |
-|----------------|---------|
-| `"spec this feature"` | Özelliği analiz eder, kabul kriterlerini yazar |
+**Caveman Modu** — Token tasarrufu
+```
+$caveman        → Aktive et (%65-75 azalır)
+$caveman off    → Kapat
+/compact        → Context penceresini sıkıştır
+```
+
+**Status Bar** — Alt satırda sürekli görünür
+```
+5h[███38%░░░░]⏰2h14m | 7d[███87%░░░░]⏰3d05h | Opus 4.7(51k/200k)
+│                          │                    │
+5 saatlik limit             7 günlük limit       Model + Context
+```
+
+**Security** — Her düzenlemede otomatik
+- .env dosyalarını commit'ten engeller
+- XSS ve injection açıklarını yakalar
+- Hardcoded API key'leri bulur
+
+**claude-mem** — Session hafızası
+- Geçmiş kararlar saklanır
+- Bir sonraki session'da Claude öncekini bilir
+- Dashboard: `http://localhost:37777`
+
+---
+
+## Skill Tetikleme
+
+Claude'a bu ifadeleri söyleyin:
+
+| Ne söyleyin | Ne olur |
+|-------------|---------|
+| `"spec this feature"` | Özelliği analiz eder, gereksinimler çıkarır |
 | `"design this system"` | Mimari alternatifleri karşılaştırır |
-| `"red team this"` | Tasarımınızdaki açıkları bulur |
+| `"red team this"` | Tasarımdaki açıkları ve riskleri bulur |
 | `"reverse engineer this"` | Kodu okuyup dokümante eder |
+| `"design this API"` | Endpoint'leri ve şemaları tasarlar |
 | `"scrape https://..."` | Web sayfasından veri çeker |
 
 ---
 
-## Her session başında
+## Maliyet Azaltma
 
-```powershell
-.\start.ps1
-```
-
-Otomatik olarak:
-- Git durumu gösterilir
-- GSD fazı hatırlatılır
-- Bootstrap prompt clipboard'a kopyalanır
-- Claude Code açılır
+| Araç | Nasıl | Tasarruf |
+|------|-------|---------|
+| `$caveman` | Her session başında yaz | %65-75 token |
+| `/compact` | Context %70'i geçince yaz | Context temizlenir |
+| `/model` | Basit işler için haiku seç | Opus'un 1/10 fiyatı |
+| `npx codeburn` | Haftalık çalıştır | Nereye para gittiğini gör |
 
 ---
 
-## Sorun mu var?
+## Sağlık Kontrolü
 
 ```
-npx codeburn optimize    → Sağlık raporu
-/doctor                  → Claude Code tanı
+npx codeburn optimize   → Sorunları listeler, çözüm önerir
+/doctor                 → Claude Code tanı
+/context                → Anlık context kullanımı
 ```
 
-github.com/cemdenizexe/claudeforge
+---
+
+*github.com/cemdenizexe/claudeforge*
