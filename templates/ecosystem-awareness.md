@@ -1,87 +1,43 @@
-# ClaudeForge Ecosystem — Awareness Guide
+# ClaudeForge Ecosystem Awareness
 
-Bu dosyayı claude.ai Projects > Instructions'a yapistir.
-Veya Desktop Commander MCP varsa Claude otomatik okur.
-
----
-
-## Sen kimsin
-
-Claude Code + Desktop + Browser = ayni ekosistem.
-ClaudeForge kurulu. Asagidakiler aktif:
-
-## Aktif araclar
-
-### Skills (~200+)
-- GSD: gsd-plan, gsd-execute, gsd-review, gsd-ship, gsd-debug
-- Caveman: $caveman = %65-75 token tasarrufu
-- Security: her edit'te otomatik tarama
-- Frontend: frontend-design, ui-ux-pro-max
-- Docs: docx, pdf, pptx, xlsx
-- Video: seedance2, claude-seo, claude-youtube
-
-### Hooks (otomatik)
-- session-start: her acilista context yukle
-- sensitive-file-guard: .env commit engelle
-- self-learning: fix commit → learnings.md yaz
-
-### MCP Servers
-- filesystem: proje dosyalarina erisim
-- Desktop Commander: terminal, process yonetimi
-- GitHub: PR, issue, repo
-- Firecrawl: web scraping
-- Playwright: browser otomasyon
-
-### Memory
-- claude-mem: session gecmisi, localhost:37777
-- CLAUDE.md: proje kurallari
-- .claude/learnings.md: hata geçmişi
+Paste this into claude.ai Projects > Instructions.
 
 ---
 
-## Nasil calistirilir
+## Active tools
 
-Claude Code:
-```
-cd [proje]
-.\start.ps1
-```
+- GSD: 70+ skills. Plan→Execute→Review→Debug→Ship
+- Caveman: $caveman = 65-75% token reduction
+- Security: auto-scan every edit
+- claude-mem: session memory, localhost:37777
+- 200+ skills: security, code-review, playwright, frontend-design, docs, video
 
-Bootstrap prompt:
-```
-Read CLAUDE.md. GSD status? Active task? Next action?
-```
+## Skill triggers
 
-Token tasarrufu:
-```
-$caveman
-```
+- New feature → "spec this feature" (Feature Forge)
+- Architecture → "design this system"
+- Code analysis → "reverse engineer this" (Spec Miner)
+- Challenge idea → "red team this" (The Fool)
+- API design → "design this API"
+- UI → frontend-design + Shadcn
+- Test → playwright + semgrep
+- Token save → $caveman + /compact
 
-Context sikiştir:
-```
-/compact
-```
+## MCP servers
 
-Model degistir:
-```
-/model
-```
+filesystem, github, firecrawl, playwright, Desktop Commander
 
----
+## Memory
 
-## Proje baslangici
+No session memory. CLAUDE.md + git log = memory. Not written = forgotten.
 
-Her yeni projede:
-1. `.\start.ps1` calistir
-2. Bootstrap prompt yapistir
-3. GSD baslatmak icin: `/gsd-new-project`
+## Task routing
 
----
+Simple → haiku. Single file → sonnet. Multi-file/arch → opus. 3+ parallel → opus + swarm.
 
-## Kurallar
+## Rules
 
-- Read before edit (4:1 oran)
-- CLAUDE.md her session okunur
-- Fix commit → learnings.md otomatik
-- .env asla commit edilmez
-- Main'e direkt push yasak
+- Read before edit (4:1 ratio)
+- CLAUDE.md read every session
+- Never commit .env
+- Never push to main directly

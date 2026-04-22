@@ -178,23 +178,36 @@ Write-Host "  Status bar..." -ForegroundColor $dim -NoNewline
 $sj = Join-Path $CLAUDE_DIR "settings.json"
 $sbCommand = $null
 
-# 1. ccstatusline dene
+# npm global kur
 npm install -g ccstatusline 2>$null
-$test = ccstatusline 2>$null
-if ($LASTEXITCODE -eq 0 -or $test) { $sbCommand = "ccstatusline" }
 
-# 2. claude-code-usage-bar dene
-if (-not $sbCommand) {
-    npm install -g claude-code-usage-bar 2>$null
-    $test2 = claude-code-usage-bar 2>$null
-    if ($LASTEXITCODE -eq 0 -or $test2) { $sbCommand = "claude-code-usage-bar" }
+# WSL varsa PATH fix + absolute path kullan
+$HAS_WSL = $false
+try { $wslCheck = wsl --list --quiet 2>$null; if ($wslCheck) { $HAS_WSL = $true } } catch {}
+
+if ($HAS_WSL) {
+    # WSL'de npm global bin PATH'e ekle
+    wsl bash -lc 'grep -q npm-global ~/.bashrc || echo "export PATH=$HOME/.npm-global/bin:$PATH" >> ~/.bashrc' 2>$null
+    wsl bash -lc 'grep -q npm-global ~/.profile || echo "export PATH=$HOME/.npm-global/bin:$PATH" >> ~/.profile' 2>$null
+    # WSL'de ccstatusline kur
+    wsl bash -lc 'npm install -g ccstatusline 2>/dev/null' 2>$null
+    # Absolute path ile kaydet
+    $wslPath = wsl bash -lc 'which ccstatusline 2>/dev/null || echo "$HOME/.npm-global/bin/ccstatusline"' 2>$null
+    if ($wslPath) { $sbCommand = $wslPath.Trim() }
 }
 
-# 3. Bulunduysa settings.json'a yaz
+# Windows fallback
+if (-not $sbCommand) {
+    $ccPath = (Get-Command "ccstatusline" -EA SilentlyContinue)?.Source
+    if ($ccPath) { $sbCommand = $ccPath }
+    elseif (Get-Command "ccstatusline" -EA SilentlyContinue) { $sbCommand = "ccstatusline" }
+}
+
 if ($sbCommand) {
     try {
-        $sc = Get-Content $sj -Raw -EA SilentlyContinue | ConvertFrom-Json
-        if (-not $sc) { $sc = [PSCustomObject]@{} }
+        $raw = Get-Content $sj -Raw -EA SilentlyContinue
+        if (-not $raw) { $raw = '{}' }
+        $sc = $raw -replace '(?m)^\s*//[^\n]*','' | ConvertFrom-Json
         if (-not $sc.statusLine) {
             $sc | Add-Member -NotePropertyName "statusLine" -NotePropertyValue @{ type="command"; command=$sbCommand } -Force
             $sc | ConvertTo-Json -Depth 5 | Set-Content $sj -Encoding UTF8
