@@ -6,22 +6,21 @@ $accent = "DarkYellow"
 $dim = "DarkGray"
 
 Write-Host ""
-Write-Host "                    _" -ForegroundColor DarkYellow
-Write-Host "                  _( }}" -ForegroundColor DarkYellow
-Write-Host "                 / ( ((" -ForegroundColor DarkYellow
-Write-Host "                / / /|\" -ForegroundColor DarkYellow
-Write-Host "               ( ( / \ \" -ForegroundColor DarkYellow
-Write-Host "                \ \|   \ \" -ForegroundColor DarkYellow
-Write-Host "                 \  \___\ \" -ForegroundColor DarkYellow
-Write-Host "                  \ /    \ \" -ForegroundColor DarkYellow
-Write-Host "     ___________  / /     \ \" -ForegroundColor DarkYellow
-Write-Host "    /  _________\/ /   ____\ \" -ForegroundColor DarkYellow
-Write-Host "   /  /          \/   /     \ \" -ForegroundColor DarkYellow
-Write-Host "  /  /   ClaudeForge \  /    \ \" -ForegroundColor White
-Write-Host " /  /________________ \/ _____\ \" -ForegroundColor DarkYellow
-Write-Host "(______________________)________))" -ForegroundColor DarkYellow
+Write-Host "          .-------.        " -ForegroundColor DarkYellow
+Write-Host "        .'         '.      " -ForegroundColor DarkYellow
+Write-Host "       /  .--. .--.  \     " -ForegroundColor DarkYellow
+Write-Host "      |  /    |    \  |    " -ForegroundColor DarkYellow
+Write-Host "      | |     |     | |    " -ForegroundColor DarkYellow
+Write-Host "  .---' |.----+----.|  '---." -ForegroundColor DarkYellow
+Write-Host "  |  [  || C L A U D E F O R G E ||  ]  |" -ForegroundColor White
+Write-Host "  '---. |'----+----'|  .---'" -ForegroundColor DarkYellow
+Write-Host "      | |\   / \   /| |    " -ForegroundColor DarkYellow
+Write-Host "      |  \.  |  ./  |  |    " -ForegroundColor DarkYellow
+Write-Host "       \   '-+-+'   /     " -ForegroundColor DarkYellow
+Write-Host "        '.         .'      " -ForegroundColor DarkYellow
+Write-Host "          '-------'        " -ForegroundColor DarkYellow
 Write-Host ""
-Write-Host "                  by cemdenizexe" -ForegroundColor White
+Write-Host "              by cemdenizexe" -ForegroundColor White
 Write-Host ""
 Write-Host "  200+ skills  |  Security autopilot  |  Self-learning" -ForegroundColor $dim
 Write-Host ""
@@ -190,6 +189,19 @@ foreach ($f in @("start.ps1", "ecosystem-awareness.md", ".claudeignore")) {
     $src = Join-Path (Join-Path $PARENT_ROOT "templates") $f
     $dst = Join-Path $TEMPLATES_DIR $f
     if (Test-Path $src) { Copy-Item -Path $src -Destination $dst -Force }
+}
+
+# start.ps1'i DEV_DIR altindaki tum projelere dagit
+Write-Host "  Distributing start.ps1 to projects..." -ForegroundColor $dim
+$startSrc = Join-Path (Join-Path $PARENT_ROOT "templates") "start.ps1"
+if (Test-Path $startSrc) {
+    $distributed = 0
+    foreach ($proj in (Get-ChildItem $DEV_DIR -Directory -ErrorAction SilentlyContinue)) {
+        $dst = Join-Path $proj.FullName "start.ps1"
+        Copy-Item -Path $startSrc -Destination $dst -Force
+        $distributed++
+    }
+    Write-Host "  start.ps1 → $distributed projects" -ForegroundColor Green
 }
 Write-Host "  CodeBurn..." -ForegroundColor $dim -NoNewline
 npm install -g codeburn 2>$null
