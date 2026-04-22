@@ -1,24 +1,24 @@
 $ErrorActionPreference = "Continue"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
+
 $accent = "DarkYellow"
 $dim = "DarkGray"
 
 Write-Host ""
-Write-Host "   _____ _                 _      ______                    " -ForegroundColor $accent
-Write-Host "  / ____| |               | |    |  ____|                   " -ForegroundColor $accent
-Write-Host " | |    | | __ _ _   _  __| | ___| |__ ___  _ __ __ _  ___ " -ForegroundColor $accent
-Write-Host " | |    | |/ _   | | | |/ _  |/ _ \  __/ _ \| '__/ _  |/ _ \" -ForegroundColor $accent
-Write-Host " | |____| | (_| | |_| | (_| |  __/ | | (_) | | | (_| |  __/" -ForegroundColor $accent
-Write-Host "  \_____|_|\__,_|\__,_|\__,_|\___|_|  \___/|_|  \__, |\___|" -ForegroundColor $accent
-Write-Host "                                                  __/ |    " -ForegroundColor $accent
-Write-Host "                                                 |___/     " -ForegroundColor $accent
+Write-Host "        )___(" -ForegroundColor DarkYellow
+Write-Host "       /     \" -ForegroundColor DarkYellow
+Write-Host "      | ^   ^ |" -ForegroundColor DarkYellow
+Write-Host "       \  V  /    _____ _                 _      ______" -ForegroundColor DarkYellow
+Write-Host "       /|   |\   / ____| |               | |    |  ____|" -ForegroundColor DarkYellow
+Write-Host "      / |   | \ | |    | | __ _ _   _  __| | ___| |__ ___  _ __ __ _  ___" -ForegroundColor DarkYellow
+Write-Host "     /  |   |  \| |    | |/ _  | | | |/ _  |/ _ \  __/ _ \| '__/ _  |/ _ \" -ForegroundColor DarkYellow
+Write-Host "    /   |   |   \| |___| | (_| | |_| | (_| |  __/ | | (_) | | | (_| |  __/" -ForegroundColor DarkYellow
+Write-Host "   /    |___|    \\_____|_|\__,_|\__,_|\__,_|\___|_|  \___/|_|  \__, |\___|" -ForegroundColor DarkYellow
+Write-Host "  /      ___      \                                               __/ |" -ForegroundColor DarkYellow
+Write-Host " /______/   \______\                                             |___/" -ForegroundColor DarkYellow
 Write-Host ""
-Write-Host "  " -NoNewline
-$byText = "by cemdenizexe"
-$rainbow = @("Red","Yellow","Green","Cyan","Blue","Magenta","Red","Yellow","Green","Cyan","Blue","Magenta","Red","Yellow")
-for ($i = 0; $i -lt $byText.Length; $i++) { Write-Host $byText[$i] -ForegroundColor $rainbow[$i] -NoNewline }
-Write-Host ""
+Write-Host "                           by cemdenizexe" -ForegroundColor White
 Write-Host ""
 Write-Host "  Turn Claude Code into a professional dev environment" -ForegroundColor White
 Write-Host "  200+ skills  |  Security autopilot  |  Self-learning" -ForegroundColor $dim
@@ -245,54 +245,9 @@ if (-not (Get-Command "bun" -ErrorAction SilentlyContinue)) {
 } else { Write-Host "  Bun found." -ForegroundColor Green }
 
 # --- [9/9] WSL Mirror ---
-if ($HAS_WSL) {
-    Write-Host "[9/9] Syncing to WSL..." -ForegroundColor Yellow
-    Write-Host "  Claude Code uses WSL - mirroring skills, hooks, and dependencies..." -ForegroundColor $dim
-
-    # Create WSL .claude directories
-    wsl bash -lc 'mkdir -p ~/.claude/skills ~/.claude/hooks'
-
-    # Mirror skills — sadece SKILL.md dosyalari, .git degil
-    Write-Host "  Mirroring skills..." -ForegroundColor $dim
-    $uname = $env:USERNAME
-    wsl bash -lc "mkdir -p ~/.claude/skills"
-    foreach ($skillDir in (Get-ChildItem (Join-Path $CLAUDE_DIR "skills") -Directory)) {
-        $skillName = $skillDir.Name
-        wsl bash -lc "mkdir -p ~/.claude/skills/$skillName"
-        wsl bash -lc "find /mnt/c/Users/$uname/.claude/skills/$skillName -name '*.md' -not -path '*/.git/*' | while read f; do cp -f \"\$f\" ~/.claude/skills/$skillName/ 2>/dev/null; done"
-    }
-    Write-Host "  Skills mirrored to WSL." -ForegroundColor Green
-
-    # Mirror hooks
-    Write-Host "  Mirroring hooks..." -ForegroundColor $dim
-    wsl bash -lc "cp /mnt/c/Users/$uname/.claude/hooks/*.js ~/.claude/hooks/"
-    wsl bash -lc "cp /mnt/c/Users/$uname/.claude/hooks/*.py ~/.claude/hooks/"
-    wsl bash -lc "cp /mnt/c/Users/$uname/.claude/hooks/*.sh ~/.claude/hooks/"
-    Write-Host "  Hooks mirrored to WSL." -ForegroundColor Green
-
-    # Mirror CLAUDE.md
-    wsl bash -lc "cp /mnt/c/Users/$uname/.claude/CLAUDE.md ~/.claude/CLAUDE.md"
-    Write-Host "  CLAUDE.md mirrored to WSL." -ForegroundColor Green
-
-    # Install dependencies in WSL
-    Write-Host "  Installing WSL dependencies..." -ForegroundColor $dim
-    wsl bash -lc 'which bun || npm install -g bun'
-
-    # Symlink to /usr/local/bin so non-interactive hooks find them
-    Write-Host "  Creating symlinks for hook access..." -ForegroundColor $dim
-    wsl -u root ln -sf '$(which bun 2>/dev/null || echo /home/$USER/.npm-global/bin/bun)' /usr/local/bin/bun 2>$null
-
-    # Fix PATH for non-interactive shells
-    wsl bash -lc 'grep -q local/bin ~/.profile || echo "export PATH=\$HOME/.local/bin:\$HOME/.npm-global/bin:\$PATH" >> ~/.profile'
-    Write-Host "  WSL dependencies ready." -ForegroundColor Green
-
-    # Report
-    $wslSkillCount = wsl bash -lc 'ls ~/.claude/skills/ | wc -l'
-    $wslHookCount = wsl bash -lc 'ls ~/.claude/hooks/ | wc -l'
-    Write-Host "  WSL: $wslSkillCount skills, $wslHookCount hooks synced." -ForegroundColor Cyan
-} else {
-    Write-Host "[9/9] No WSL detected - skipping." -ForegroundColor $dim
-}
+# WSL - skip
+Write-Host "[9/9] WSL sync skipped (Claude Code runs native on Windows)" -ForegroundColor $dim
+Write-Host ""
 
 # --- Complete ---
 Write-Host ""
