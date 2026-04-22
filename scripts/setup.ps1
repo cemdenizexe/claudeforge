@@ -173,19 +173,47 @@ if (Test-Path $startSrc) {
 }
 npm install -g codeburn 2>$null; Write-Host "  CodeBurn ok" -ForegroundColor Green
 
-$sbDir = Join-Path $HOME_DIR ".claude\statusline"
-if (-not (Test-Path $sbDir)) { git clone --depth 1 https://github.com/daniel3303/ClaudeCodeStatusLine.git $sbDir 2>$null }
-$sbScript = Join-Path $sbDir "statusline.ps1"
-if (Test-Path $sbScript) {
-    $sj = Join-Path $CLAUDE_DIR "settings.json"
+# Status bar — WSL + Windows uyumlu
+Write-Host "  Status bar..." -ForegroundColor $dim -NoNewline
+$sj = Join-Path $CLAUDE_DIR "settings.json"
+$sbInstalled = $false
+
+# Önce leeguooooo/claude-code-usage-bar dene (WSL + Windows)
+try {
+    npm install -g claude-code-usage-bar 2>$null
+    $testOut = & claude-code-usage-bar 2>$null
+    if ($LASTEXITCODE -eq 0 -or $testOut) {
+        $sbInstalled = $true
+        $sbCommand = "claude-code-usage-bar"
+    }
+} catch {}
+
+# Çalışmazsa daniel3303/ClaudeCodeStatusLine dene (Windows only)
+if (-not $sbInstalled) {
+    $sbDir = Join-Path $HOME_DIR ".claude\statusline"
+    if (-not (Test-Path $sbDir)) {
+        git clone --depth 1 https://github.com/daniel3303/ClaudeCodeStatusLine.git $sbDir 2>$null
+    }
+    $sbScript = Join-Path $sbDir "statusline.ps1"
+    if (Test-Path $sbScript) {
+        $sbInstalled = $true
+        $sbCommand = "powershell -NonInteractive -File `"$sbScript`""
+    }
+}
+
+if ($sbInstalled) {
     try {
         $sc = Get-Content $sj -Raw | ConvertFrom-Json
         if (-not $sc.statusLine) {
-            $sc | Add-Member -NotePropertyName "statusLine" -NotePropertyValue @{ type="command"; command="powershell -File `"$sbScript`"" } -Force
+            $sc | Add-Member -NotePropertyName "statusLine" -NotePropertyValue @{
+                type = "command"; command = $sbCommand
+            } -Force
             $sc | ConvertTo-Json -Depth 5 | Set-Content $sj -Encoding UTF8
         }
-        Write-Host "  Status bar ok" -ForegroundColor Green
-    } catch { Write-Host "  Status bar skipped" -ForegroundColor DarkYellow }
+        Write-Host " ok ($sbCommand)" -ForegroundColor Green
+    } catch { Write-Host " skipped (settings parse error)" -ForegroundColor DarkYellow }
+} else {
+    Write-Host " skipped (no compatible status bar found)" -ForegroundColor DarkYellow
 }
 
 $desktopConfig = "$env:APPDATA\Claude\claude_desktop_config.json"
@@ -253,4 +281,5 @@ Write-Host "  [4] Saglik:" -ForegroundColor Yellow
 Write-Host "      npx codeburn optimize" -ForegroundColor White
 Write-Host ""
 Write-Host "  Docs: https://github.com/cemdenizexe/claudeforge" -ForegroundColor $dim
+Write-Host "  MCP'ler: https://github.com/cemdenizexe/claudeforge/blob/main/docs/12-mcp-servers.md" -ForegroundColor $dim
 Write-Host ""

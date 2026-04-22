@@ -82,6 +82,7 @@ Quick start:
 | [Güvenlik](docs/07-security.md) | Otomatik hook'lar, riskler |
 | [Multi-Project](docs/08-multi-project.md) | 10+ proje yönetimi |
 | [Context Takibi](docs/11-health-check.md) | claude-mem, codeburn, status bar |
+| [MCP Sunucuları](docs/12-mcp-servers.md) | Önerilen MCP'ler, kurulum komutları |
 
 ---
 
