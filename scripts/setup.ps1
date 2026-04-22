@@ -6,21 +6,21 @@ $accent = "DarkYellow"
 $dim = "DarkGray"
 
 Write-Host ""
-Write-Host "        .-------.       " -ForegroundColor DarkYellow
-Write-Host "      .'         '.     " -ForegroundColor DarkYellow
-Write-Host "     /  .--. .--.  \    " -ForegroundColor DarkYellow
-Write-Host "    |  /    |    \  |   " -ForegroundColor DarkYellow
-Write-Host "    | |     |     | |   " -ForegroundColor DarkYellow
-Write-Host " .--' |-----+-----| '--.  " -ForegroundColor DarkYellow
-Write-Host " | [ CLAUDEFORGE ] |    " -ForegroundColor White
-Write-Host " '--. |-----+-----| .--'  " -ForegroundColor DarkYellow
-Write-Host "    | |\   / \   /| |   " -ForegroundColor DarkYellow
-Write-Host "    |  \ '-+-' /  |  |   " -ForegroundColor DarkYellow
-Write-Host "     \   '---'   /     " -ForegroundColor DarkYellow
-Write-Host "      '.         .'     " -ForegroundColor DarkYellow
-Write-Host "        '-------'       " -ForegroundColor DarkYellow
+Write-Host "   ██████╗██╗      █████╗ ██╗   ██╗██████╗ ███████╗" -ForegroundColor DarkYellow
+Write-Host "  ██╔════╝██║     ██╔══██╗██║   ██║██╔══██╗██╔════╝" -ForegroundColor DarkYellow
+Write-Host "  ██║     ██║     ███████║██║   ██║██║  ██║█████╗  " -ForegroundColor DarkYellow
+Write-Host "  ██║     ██║     ██╔══██║██║   ██║██║  ██║██╔══╝  " -ForegroundColor DarkYellow
+Write-Host "  ╚██████╗███████╗██║  ██║╚██████╔╝██████╔╝███████╗" -ForegroundColor DarkYellow
+Write-Host "   ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝╚══════╝" -ForegroundColor DarkYellow
 Write-Host ""
-Write-Host "          by cemdenizexe" -ForegroundColor White
+Write-Host "  ███████╗ ██████╗ ██████╗  ██████╗ ███████╗" -ForegroundColor Yellow
+Write-Host "  ██╔════╝██╔═══██╗██╔══██╗██╔════╝ ██╔════╝" -ForegroundColor Yellow
+Write-Host "  █████╗  ██║   ██║██████╔╝██║  ███╗█████╗  " -ForegroundColor Yellow
+Write-Host "  ██╔══╝  ██║   ██║██╔══██╗██║   ██║██╔══╝  " -ForegroundColor Yellow
+Write-Host "  ██║     ╚██████╔╝██║  ██║╚██████╔╝███████╗" -ForegroundColor Yellow
+Write-Host "  ╚═╝      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚══════╝" -ForegroundColor Yellow
+Write-Host ""
+Write-Host "                    by cemdenizexe" -ForegroundColor White
 Write-Host ""
 Write-Host "  200+ skills | Security autopilot | Self-learning" -ForegroundColor $dim
 Write-Host ""
