@@ -6,23 +6,23 @@ $accent = "DarkYellow"
 $dim = "DarkGray"
 
 Write-Host ""
-Write-Host "          .-------.        " -ForegroundColor DarkYellow
-Write-Host "        .'         '.      " -ForegroundColor DarkYellow
-Write-Host "       /  .--. .--.  \     " -ForegroundColor DarkYellow
-Write-Host "      |  /    |    \  |    " -ForegroundColor DarkYellow
-Write-Host "      | |     |     | |    " -ForegroundColor DarkYellow
-Write-Host "  .---' |.----+----.|  '---." -ForegroundColor DarkYellow
-Write-Host "  |  [  || C L A U D E F O R G E ||  ]  |" -ForegroundColor White
-Write-Host "  '---. |'----+----'|  .---'" -ForegroundColor DarkYellow
-Write-Host "      | |\   / \   /| |    " -ForegroundColor DarkYellow
-Write-Host "      |  \.  |  ./  |  |    " -ForegroundColor DarkYellow
-Write-Host "       \   '-+-+'   /     " -ForegroundColor DarkYellow
-Write-Host "        '.         .'      " -ForegroundColor DarkYellow
-Write-Host "          '-------'        " -ForegroundColor DarkYellow
+Write-Host "        .-------.       " -ForegroundColor DarkYellow
+Write-Host "      .'         '.     " -ForegroundColor DarkYellow
+Write-Host "     /  .--. .--.  \    " -ForegroundColor DarkYellow
+Write-Host "    |  /    |    \  |   " -ForegroundColor DarkYellow
+Write-Host "    | |     |     | |   " -ForegroundColor DarkYellow
+Write-Host " .--' |-----+-----| '--.  " -ForegroundColor DarkYellow
+Write-Host " | [ CLAUDEFORGE ] |    " -ForegroundColor White
+Write-Host " '--. |-----+-----| .--'  " -ForegroundColor DarkYellow
+Write-Host "    | |\   / \   /| |   " -ForegroundColor DarkYellow
+Write-Host "    |  \ '-+-' /  |  |   " -ForegroundColor DarkYellow
+Write-Host "     \   '---'   /     " -ForegroundColor DarkYellow
+Write-Host "      '.         .'     " -ForegroundColor DarkYellow
+Write-Host "        '-------'       " -ForegroundColor DarkYellow
 Write-Host ""
-Write-Host "              by cemdenizexe" -ForegroundColor White
+Write-Host "          by cemdenizexe" -ForegroundColor White
 Write-Host ""
-Write-Host "  200+ skills  |  Security autopilot  |  Self-learning" -ForegroundColor $dim
+Write-Host "  200+ skills | Security autopilot | Self-learning" -ForegroundColor $dim
 Write-Host ""
 Write-Host "  ------------------------------------------------" -ForegroundColor $dim
 Write-Host ""
@@ -140,16 +140,43 @@ if ($INSTALL_GSD -eq 'y') {
 }
 Write-Host "  Skills installed." -ForegroundColor Green
 
-# --- [6/9] Hooks ---
-Write-Host "[6/9] Installing hooks..." -ForegroundColor Yellow
+# --- [6/9] Hooks + settings.json wiring ---
+Write-Host "[6/9] Installing hooks + wiring to settings.json..." -ForegroundColor Yellow
 $hookSource = Join-Path $PARENT_ROOT "templates"
 foreach ($hook in @("sensitive-file-guard.js", "self-learning.js", "skill-discovery.js", "session-start.js", "update-check.js")) {
     $src = Join-Path $hookSource $hook
     $dst = Join-Path $HOOKS_DIR $hook
-    if (Test-Path $src) {
-        Copy-Item -Path $src -Destination $dst -Force
-        Write-Host "  $hook" -ForegroundColor Green
+    if (Test-Path $src) { Copy-Item -Path $src -Destination $dst -Force; Write-Host "  $hook" -ForegroundColor Green }
+}
+
+# Wire hooks to settings.json
+$settingsJson = Join-Path $CLAUDE_DIR "settings.json"
+$hooksDir_fwd = $HOOKS_DIR.Replace('\', '/')
+$hookConfig = @{
+    hooks = @{
+        SessionStart = @(@{ hooks = @(@{ type = "command"; command = "node `"$hooksDir_fwd/session-start.js`"" }) })
+        PreToolUse = @(
+            @{ matcher = "Edit|Write|MultiEdit"; hooks = @(@{ type = "command"; command = "node `"$hooksDir_fwd/sensitive-file-guard.js`""; timeout = 5 }) }
+        )
+        PostToolUse = @(
+            @{ matcher = "Bash"; hooks = @(@{ type = "command"; command = "node `"$hooksDir_fwd/self-learning.js`""; timeout = 5 }) }
+        )
     }
+}
+
+try {
+    $raw = if (Test-Path $settingsJson) { Get-Content $settingsJson -Raw } else { '{}' }
+    $raw = $raw -replace '(?m)^\s*//.*$','' -replace ',(\s*[}\]])',('$1')
+    $existing = $raw | ConvertFrom-Json
+    if (-not $existing.hooks) {
+        $existing | Add-Member -NotePropertyName "hooks" -NotePropertyValue $hookConfig.hooks -Force
+        $existing | ConvertTo-Json -Depth 10 | Set-Content $settingsJson -Encoding UTF8
+        Write-Host "  Hooks wired to settings.json" -ForegroundColor Green
+    } else {
+        Write-Host "  Hooks already in settings.json" -ForegroundColor $dim
+    }
+} catch {
+    Write-Host "  Could not wire hooks (settings.json parse error)" -ForegroundColor DarkYellow
 }
 
 # --- [7/9] Global CLAUDE.md ---
@@ -276,9 +303,6 @@ Write-Host "    Hooks       session-start, sensitive-file-guard, self-learning, 
 Write-Host '    Workflow    GSD workflow engine' -ForegroundColor $dim
 Write-Host "    Config      Global CLAUDE.md with Skill Activation Guide" -ForegroundColor $dim
 Write-Host "    Dashboard   CodeBurn (npx codeburn)" -ForegroundColor $dim
-if ($HAS_WSL) {
-    Write-Host "    WSL         All skills, hooks, deps mirrored" -ForegroundColor Cyan
-}
 Write-Host ""
 Write-Host "  Quick start:" -ForegroundColor White
 Write-Host "    cd $DEV_DIR\[your-project]" -ForegroundColor $dim
@@ -299,16 +323,21 @@ Write-Host "  [1] Claude Code icin:" -ForegroundColor Yellow
 Write-Host "      cd $DEV_DIR\[proje]" -ForegroundColor $dim
 Write-Host "      .\start.ps1" -ForegroundColor $dim
 Write-Host ""
-Write-Host "  [2] Claude Desktop farkindалigi icin:" -ForegroundColor Yellow
+Write-Host "  [2] Claude Desktop awareness:" -ForegroundColor Yellow
 if (Test-Path $desktopConfig) {
-    Write-Host "      Filesystem MCP eklendi. Claude Desktop'i yeniden baslat." -ForegroundColor Green
-    Write-Host "      Sonra su promptu ver:" -ForegroundColor $dim
-    Write-Host "      'Read ~/.claude/CLAUDE.md and confirm ClaudeForge is active'" -ForegroundColor Cyan
+    Write-Host "      Filesystem MCP added. Restart Claude Desktop." -ForegroundColor Green
+    Write-Host "      Then paste this prompt:" -ForegroundColor $dim
 } else {
-    Write-Host "      claude.ai/claude.ai'da Projects ac" -ForegroundColor $dim
-    Write-Host "      Instructions alanina su dosyayi yapistir:" -ForegroundColor $dim
-    Write-Host "      $CLAUDE_DIR\CLAUDE.md" -ForegroundColor Cyan
+    Write-Host "      Open claude.ai → Projects → Instructions" -ForegroundColor $dim
+    Write-Host "      Paste this prompt:" -ForegroundColor $dim
 }
+Write-Host ""
+Write-Host "  ┌─────────────────────────────────────────────────────────┐" -ForegroundColor Cyan
+Write-Host "  │ Read ~/.claude/CLAUDE.md fully. List active skills,     │" -ForegroundColor Cyan
+Write-Host "  │ hooks, and GSD status. Confirm ClaudeForge is active.   │" -ForegroundColor Cyan
+Write-Host "  └─────────────────────────────────────────────────────────┘" -ForegroundColor Cyan
+$desktopPrompt = "Read ~/.claude/CLAUDE.md fully. List active skills, hooks, and GSD status. Confirm ClaudeForge is active."
+try { $desktopPrompt | Set-Clipboard; Write-Host "      (copied to clipboard)" -ForegroundColor Green } catch {}
 Write-Host ""
 Write-Host "  [3] Ilk proje icin:" -ForegroundColor Yellow
 Write-Host "      .\start.ps1 calistir → model sec → bootstrap prompt yapistir" -ForegroundColor $dim
