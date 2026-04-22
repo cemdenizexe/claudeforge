@@ -1,4 +1,6 @@
 $ErrorActionPreference = "Continue"
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
 $accent = "DarkYellow"
 $dim = "DarkGray"
 
@@ -56,19 +58,19 @@ Write-Host "  All prerequisites found." -ForegroundColor Green
 # --- [2/9] Configuration ---
 Write-Host ""
 Write-Host "[2/9] Configuration..." -ForegroundColor Yellow
-$DEV_DIR = Read-Host "  Your projects directory (e.g. D:\Dev, C:\code)"
+$DEV_DIR = (Read-Host "  Your projects directory (e.g. D:\Dev, C:\code)").Trim()
 if (-not $DEV_DIR) { $DEV_DIR = "D:\Dev" }
 if (-not (Test-Path $DEV_DIR)) {
     $create = Read-Host "  $DEV_DIR doesn't exist. Create it? (y/n)"
     if ($create -eq 'y') { New-Item -Path $DEV_DIR -ItemType Directory -Force | Out-Null }
 }
-$USER_NAME = Read-Host "  Your name (for CLAUDE.md identity)"
+$USER_NAME = (Read-Host "  Your name (for CLAUDE.md identity)").Trim()
 if (-not $USER_NAME) { $USER_NAME = "Developer" }
-$INSTALL_CAVEMAN = Read-Host "  Install Caveman? 65-75% token savings (y/n)"
+$INSTALL_CAVEMAN = (Read-Host "  Install Caveman? 65-75% token savings (y/n)").Trim()
 if (-not $INSTALL_CAVEMAN) { $INSTALL_CAVEMAN = "y" }
-$INSTALL_VIDEO = Read-Host "  Install video pipeline skills? Seedance/SEO/YouTube (y/n)"
+$INSTALL_VIDEO = (Read-Host "  Install video pipeline skills? Seedance/SEO/YouTube (y/n)").Trim()
 if (-not $INSTALL_VIDEO) { $INSTALL_VIDEO = "n" }
-$INSTALL_GSD = Read-Host "  Install GSD? 70+ workflow commands + statusbar (y/n)"
+$INSTALL_GSD = (Read-Host "  Install GSD? 70+ workflow commands + statusbar (y/n)").Trim()
 if (-not $INSTALL_GSD) { $INSTALL_GSD = "y" }
 Write-Host ""
 
@@ -250,10 +252,15 @@ if ($HAS_WSL) {
     # Create WSL .claude directories
     wsl bash -lc 'mkdir -p ~/.claude/skills ~/.claude/hooks'
 
-    # Mirror skills
+    # Mirror skills — sadece SKILL.md dosyalari, .git degil
     Write-Host "  Mirroring skills..." -ForegroundColor $dim
     $uname = $env:USERNAME
-    wsl bash -lc "cp -r /mnt/c/Users/$uname/.claude/skills/* ~/.claude/skills/"
+    wsl bash -lc "mkdir -p ~/.claude/skills"
+    foreach ($skillDir in (Get-ChildItem (Join-Path $CLAUDE_DIR "skills") -Directory)) {
+        $skillName = $skillDir.Name
+        wsl bash -lc "mkdir -p ~/.claude/skills/$skillName"
+        wsl bash -lc "find /mnt/c/Users/$uname/.claude/skills/$skillName -name '*.md' -not -path '*/.git/*' | while read f; do cp -f \"\$f\" ~/.claude/skills/$skillName/ 2>/dev/null; done"
+    }
     Write-Host "  Skills mirrored to WSL." -ForegroundColor Green
 
     # Mirror hooks
