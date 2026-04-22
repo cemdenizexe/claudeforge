@@ -6,21 +6,23 @@ $accent = "DarkYellow"
 $dim = "DarkGray"
 
 Write-Host ""
-Write-Host "        )___(" -ForegroundColor DarkYellow
-Write-Host "       /     \" -ForegroundColor DarkYellow
-Write-Host "      | ^   ^ |" -ForegroundColor DarkYellow
-Write-Host "       \  V  /    _____ _                 _      ______" -ForegroundColor DarkYellow
-Write-Host "       /|   |\   / ____| |               | |    |  ____|" -ForegroundColor DarkYellow
-Write-Host "      / |   | \ | |    | | __ _ _   _  __| | ___| |__ ___  _ __ __ _  ___" -ForegroundColor DarkYellow
-Write-Host "     /  |   |  \| |    | |/ _  | | | |/ _  |/ _ \  __/ _ \| '__/ _  |/ _ \" -ForegroundColor DarkYellow
-Write-Host "    /   |   |   \| |___| | (_| | |_| | (_| |  __/ | | (_) | | | (_| |  __/" -ForegroundColor DarkYellow
-Write-Host "   /    |___|    \\_____|_|\__,_|\__,_|\__,_|\___|_|  \___/|_|  \__, |\___|" -ForegroundColor DarkYellow
-Write-Host "  /      ___      \                                               __/ |" -ForegroundColor DarkYellow
-Write-Host " /______/   \______\                                             |___/" -ForegroundColor DarkYellow
+Write-Host "                    _" -ForegroundColor DarkYellow
+Write-Host "                  _( }}" -ForegroundColor DarkYellow
+Write-Host "                 / ( ((" -ForegroundColor DarkYellow
+Write-Host "                / / /|\" -ForegroundColor DarkYellow
+Write-Host "               ( ( / \ \" -ForegroundColor DarkYellow
+Write-Host "                \ \|   \ \" -ForegroundColor DarkYellow
+Write-Host "                 \  \___\ \" -ForegroundColor DarkYellow
+Write-Host "                  \ /    \ \" -ForegroundColor DarkYellow
+Write-Host "     ___________  / /     \ \" -ForegroundColor DarkYellow
+Write-Host "    /  _________\/ /   ____\ \" -ForegroundColor DarkYellow
+Write-Host "   /  /          \/   /     \ \" -ForegroundColor DarkYellow
+Write-Host "  /  /   ClaudeForge \  /    \ \" -ForegroundColor White
+Write-Host " /  /________________ \/ _____\ \" -ForegroundColor DarkYellow
+Write-Host "(______________________)________))" -ForegroundColor DarkYellow
 Write-Host ""
-Write-Host "                           by cemdenizexe" -ForegroundColor White
+Write-Host "                  by cemdenizexe" -ForegroundColor White
 Write-Host ""
-Write-Host "  Turn Claude Code into a professional dev environment" -ForegroundColor White
 Write-Host "  200+ skills  |  Security autopilot  |  Self-learning" -ForegroundColor $dim
 Write-Host ""
 Write-Host "  ------------------------------------------------" -ForegroundColor $dim
