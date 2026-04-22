@@ -1,22 +1,37 @@
 # ClaudeForge ⚒️
-### Turn Claude Code from a chatbot into a professional development environment
+### Claude Code için üretim-hazır geliştirici ortamı
 
 🇬🇧 [English](README.md) | 🇹🇷 [Türkçe](README.tr.md)
 
-> One setup wizard. 200+ skills. Security autopilot. Self-learning. Multi-project sync.
-> Built by [cemdenizexe](https://github.com/cemdenizexe) — managing 18+ projects with a unified workflow.
+> Tek kurulum. 200+ skill. Otomatik güvenlik. Self-learning hafıza. Multi-project sync.
 
-## What is this?
+---
 
-A battle-tested setup for developers who want to:
-- Run Claude Code with **200+ skills** that trigger at the right time
-- Use **GSD workflow** (70+ commands, 9 auto-hooks)
-- Connect **27 browser connectors** (crypto, finance, design, deployment, AI)
-- Manage **multiple projects** from a single ecosystem
-- Save **65-75% tokens** with Caveman mode
-- Auto-sync skills, configs, and templates across all projects
+## Bu nedir?
 
-## Quick Start (5 minutes)
+ClaudeForge; Anthropic'in Claude Code'unu, mevcut açık kaynak araçları, skill'ler ve hook'ları bir araya getirerek profesyonel bir geliştirici ortamına dönüştüren bir **kurulum framework'ü**dür.
+
+Kendi başına bir ürün değildir. Aşağıdaki araçları senin cihazına kurar ve yapılandırır:
+- [Claude Code](https://github.com/anthropics/claude-code) — Anthropic'in terminal AI aracı
+- [GSD](https://github.com/softworks427/get-shit-done) — workflow engine
+- [claude-mem](https://github.com/thedotmack/claude-mem) — session hafızası
+- [Caveman](https://github.com/JuliusBrussee/caveman) — token tasarrufu
+- [Superpowers](https://github.com/obra/superpowers) — paralel agent framework
+- Ve 200+ başka skill/plugin
+
+ClaudeForge bu araçların sahibi değildir. Her aracın kendi lisansı geçerlidir.
+
+---
+
+## Sorumluluk Reddi
+
+> **ÖNEMLİ:** ClaudeForge, yüklediği üçüncü taraf araçların (MCP server'lar, plugin'ler, skill'ler) güvenliği, gizliliği veya güvenilirliği konusunda hiçbir garanti vermez ve sorumluluk kabul etmez. Kurulum öncesinde ilgili araçların kaynak kodunu ve lisanslarını incelemenizi öneririz. MCP server'lar yerel makinenizde çalışır ve dosya sisteminize, ağ bağlantılarınıza veya ortam değişkenlerinize erişebilir. Bilinçli kurulum yapın.
+
+---
+
+## Hızlı Başlangıç (5 dakika)
+
+**Gereksinimler:** Node.js, Git, Claude Code
 
 ```powershell
 git clone https://github.com/cemdenizexe/claudeforge.git
@@ -24,110 +39,52 @@ cd claudeforge
 powershell -ExecutionPolicy Bypass -File scripts/setup.ps1
 ```
 
-The wizard will ask:
-1. **Where are your projects?** (e.g. `D:\Dev`, `~/projects`)
-2. **Your name** (for CLAUDE.md identity)
-3. **Install Caveman?** (65-75% token savings)
-4. **Install video pipeline?** (Seedance 2.0, SEO, YouTube skills)
+Wizard sorar:
+1. Projelerinizin dizini (`D:\Dev`, `C:\code` vb.)
+2. İsminiz (CLAUDE.md kimliği için)
+3. Caveman kurulsun mu? (token tasarrufu)
+4. Video pipeline kurulsun mu? (Seedance, SEO, YouTube)
+5. GSD kurulsun mu? (workflow engine)
 
-Then it auto-installs 18 plugins, skills, security hooks, GSD workflow, and generates your personalized Global CLAUDE.md.
+Sonra otomatik: 16 plugin + skill'ler + security hook'ları + GSD + global CLAUDE.md.
 
-## Documentation
+---
 
-| Guide | What you'll learn |
-|-------|-------------------|
-| [00 — Usage Guide](docs/00-usage-guide.md) | Daily workflow, 8 real scenarios, token optimization |
-| [01 — Getting Started](docs/01-getting-started.md) | Installation, first project, basic commands |
-| [02 — Skills System](docs/02-skills-system.md) | SKILL.md files, how to install, trigger phrases |
-| [03 — Plugins vs Skills](docs/03-plugins-vs-skills.md) | The difference and why it matters |
-| [04 — GSD Workflow](docs/04-gsd-workflow.md) | 70+ commands, 9 hooks, Plan-Execute-Review-Ship |
-| [05 — Connectors & MCP](docs/05-connectors-mcp.md) | Browser connectors, filesystem access |
-| [06 — CLAUDE.md Engineering](docs/06-claude-md-engineering.md) | Global vs local, what actually gets read |
-| [07 — Security](docs/07-security.md) | Vibe coding survival guide |
-| [08 — Multi-Project Setup](docs/08-multi-project.md) | Managing 10+ projects, sync scripts |
-| [09 — Video Pipeline](docs/09-video-pipeline.md) | Remotion + Seedance 2.0 + auto-publish |
-| [10 — Browser-Desktop Bridge](docs/10-browser-desktop-bridge.md) | Claude Desktop and Claude Code together |
-| [02 — Skills System](docs/02-skills-system.md) | SKILL.md files, how to install, trigger phrases |
-| [03 — Plugins vs Skills](docs/03-plugins-vs-skills.md) | The difference and why it matters |
-| [04 — GSD Workflow](docs/04-gsd-workflow.md) | 70+ commands, 9 hooks, Plan-Execute-Review-Ship |
-| [05 — Connectors & MCP](docs/05-connectors-mcp.md) | Browser connectors, filesystem access, Desktop Commander |
-| [06 — CLAUDE.md Engineering](docs/06-claude-md-engineering.md) | Global vs local, what actually gets read |
-| [07 — Security](docs/07-security.md) | Vibe coding survival guide |
-| [08 — Multi-Project Setup](docs/08-multi-project.md) | Managing 10+ projects, sync scripts |
-| [09 — Video Pipeline](docs/09-video-pipeline.md) | Remotion + Seedance 2.0 + auto-publish |
-| [10 — Browser-Desktop Bridge](docs/10-browser-desktop-bridge.md) | Claude Desktop and Claude Code working together |
+## Kurulumdan Sonra
 
-## Templates
+Setup tamamlandığında terminal şunu gösterir:
 
-Ready-to-use files in `templates/`:
-- `CLAUDE.md` — Global config (skills, security, workflow)
-- `project-CLAUDE.md` — Per-project template with bootstrap
-- `ecosystem-awareness.md` — Browser Claude knowledge file
-- `start.ps1` — Clean session launcher (no bloat)
-- `browser-instructions.md` — claude.ai project instructions
-- `.mcp.json` — MCP server config
+```
+ClaudeForge setup complete!
 
-## Recommended Stack
+Installed:
+  Plugins      16
+  Skills       caveman + GSD + seçtikleriniz
+  Hooks        session-start, sensitive-file-guard, self-learning, skill-discovery
+  Config       Global CLAUDE.md oluşturuldu
 
-### Plugins (16) — zero redundancy
-| Plugin | Purpose |
-|--------|---------|
-| claude-mem | Session context management, 97% reuse |
-| superpowers | Brainstorming, TDD, debugging, parallel agents |
-| security-guidance | Auto security check on every edit |
-| code-review | 5-agent parallel PR review |
-| playwright | Browser test automation |
-| semgrep | OWASP static security analysis |
-| coderabbit | AI-powered code review (different approach than code-review) |
-| github | PR manager, issue tracker, release manager |
-| firecrawl | Web scraping and crawling |
-| huggingface-skills | ML model and dataset discovery |
-| chrome-devtools-mcp | Browser debugging, a11y, LCP |
-| code-simplifier | Code-focused simplification (complements Caveman) |
-| ui-ux-pro-max | 67 styles, 96 palettes, 57 font pairings |
-| obsidian | Markdown vault management |
-| document-skills | docx, pdf, pptx, xlsx generation |
-| example-skills | Anthropic bundle: frontend-design, canvas, theme-factory, skill-creator |
+Quick start:
+  cd [proje-dizini]
+  .\start.ps1
+  → Bootstrap prompt clipboard'a kopyalanır, yapıştır
+```
 
-**Why 16, not 20?** We audited every plugin for redundancy. `frontend-design` and `skill-creator` are already inside `example-skills`. Two extra `superpowers` variants were duplicates. Every plugin in this list has a unique, non-overlapping purpose.
+---
 
-### Skills (6) — `git clone` into `.claude/skills/`
-| Skill | Repo | Effect |
-|-------|------|--------|
-| Caveman | JuliusBrussee/caveman | 65-75% token reduction |
-| Claude SEO | AgriciDaniel/claude-seo | 19 SEO sub-skills |
-| Claude YouTube | AgriciDaniel/claude-youtube | Channel growth, video SEO |
-| Marketing | coreyhaines31/marketingskills | Content strategy |
-| Seedance 2.0 | dexhunter/seedance2-skill | AI video prompts |
-| Playwright | lackeyjb/playwright-skill | Browser automation |
+## Dokümantasyon
 
-### Key Concepts
+| Rehber | İçerik |
+|--------|--------|
+| [Başlangıç](docs/01-getting-started.md) | İlk proje, temel komutlar |
+| [CLAUDE.md Rehberi](docs/06-claude-md-engineering.md) | Ne işe yarar, nasıl çalışır |
+| [Skill Sistemi](docs/02-skills-system.md) | Skill nedir, nasıl kurulur |
+| [GSD Workflow](docs/04-gsd-workflow.md) | Günlük iş akışı |
+| [Güvenlik](docs/07-security.md) | Otomatik hook'lar, riskler |
+| [Multi-Project](docs/08-multi-project.md) | 10+ proje yönetimi |
+| [Context Takibi](docs/11-health-check.md) | claude-mem, codeburn, status bar |
 
-**GSD > RuFlo** for daily work. GSD runs your workflow. RuFlo only spawns parallel agents.
+---
 
-**Memory = Files.** Claude Code has no session memory. CLAUDE.md + git log = memory.
+## Lisans
 
-**Skills ≠ Plugins.** Plugins = capabilities. Skills = instructions. Both needed.
-
-**Self-Learning.** Bug found? Add to CLAUDE.md. Never repeated.
-
-## Claude Code Commands
-
-| Command | Purpose |
-|---------|---------|
-| `/init` | Initialize in current directory |
-| `/login` | Authenticate |
-| `/compact` | Compress context window |
-| `/cost` | Token usage this session |
-| `/model` | Switch opus/sonnet |
-| `/doctor` | Diagnose issues |
-| `$caveman` | Activate token savings |
-| `npx codeburn` | 7-day usage dashboard |
-
-## Contributing
-
-PRs welcome. Found a better config? Built a useful skill? Open a PR.
-
-## License
-
-MIT
+MIT — ClaudeForge kodu için. Yüklenen araçların kendi lisansları geçerlidir.

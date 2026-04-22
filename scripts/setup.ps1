@@ -191,6 +191,52 @@ Write-Host "  CodeBurn..." -ForegroundColor $dim -NoNewline
 npm install -g codeburn 2>$null
 Write-Host " ok" -ForegroundColor Green
 
+# Status bar — daniel3303/ClaudeCodeStatusLine
+Write-Host "  Status bar (token + rate limit + context)..." -ForegroundColor $dim -NoNewline
+$statusBarDir = Join-Path $HOME_DIR ".claude\statusline"
+if (-not (Test-Path $statusBarDir)) {
+    git clone --depth 1 https://github.com/daniel3303/ClaudeCodeStatusLine.git $statusBarDir 2>$null
+}
+$statusBarScript = Join-Path $statusBarDir "statusline.ps1"
+if (Test-Path $statusBarScript) {
+    $settingsJson = Join-Path $CLAUDE_DIR "settings.json"
+    $settingsContent = if (Test-Path $settingsJson) { Get-Content $settingsJson -Raw | ConvertFrom-Json } else { [PSCustomObject]@{} }
+    if (-not $settingsContent.statusLine) {
+        $settingsContent | Add-Member -NotePropertyName "statusLine" -NotePropertyValue @{
+            type = "command"
+            command = "powershell -File `"$statusBarScript`""
+        } -Force
+        $settingsContent | ConvertTo-Json -Depth 5 | Set-Content $settingsJson -Encoding UTF8
+    }
+    Write-Host " ok" -ForegroundColor Green
+} else {
+    Write-Host " skipped (clone failed)" -ForegroundColor DarkYellow
+}
+
+# Claude Desktop MCP bridge — filesystem erisimi
+Write-Host "  Claude Desktop MCP bridge..." -ForegroundColor $dim -NoNewline
+$desktopConfig = "$env:APPDATA\Claude\claude_desktop_config.json"
+if (Test-Path $desktopConfig) {
+    try {
+        $dc = Get-Content $desktopConfig -Raw | ConvertFrom-Json
+        if (-not $dc.mcpServers) { $dc | Add-Member -NotePropertyName "mcpServers" -NotePropertyValue ([PSCustomObject]@{}) -Force }
+        if (-not $dc.mcpServers.filesystem) {
+            $dc.mcpServers | Add-Member -NotePropertyName "filesystem" -NotePropertyValue @{
+                command = "npx"
+                args = @("-y", "@modelcontextprotocol/server-filesystem", $CLAUDE_DIR, $DEV_DIR)
+            } -Force
+            $dc | ConvertTo-Json -Depth 8 | Set-Content $desktopConfig -Encoding UTF8
+            Write-Host " ok (filesystem MCP added)" -ForegroundColor Green
+        } else {
+            Write-Host " already configured" -ForegroundColor $dim
+        }
+    } catch {
+        Write-Host " skipped (config parse error)" -ForegroundColor DarkYellow
+    }
+} else {
+    Write-Host " skipped (Claude Desktop not found)" -ForegroundColor DarkYellow
+}
+
 if (-not (Get-Command "bun" -ErrorAction SilentlyContinue)) {
     $installBun = Read-Host "  Bun not found. Install? Some plugins use it. (y/n)"
     if ($installBun -eq 'y') { npm install -g bun 2>$null }
@@ -268,4 +314,26 @@ if ($INSTALL_CAVEMAN -eq 'y') {
 Write-Host ""
 Write-Host "  Health check: npx codeburn optimize" -ForegroundColor $dim
 Write-Host "  Docs: https://github.com/cemdenizexe/claudeforge" -ForegroundColor $dim
+Write-Host ""
+Write-Host "  ================================================" -ForegroundColor $accent
+Write-Host "  SONRAKI ADIMLAR" -ForegroundColor White
+Write-Host "  ================================================" -ForegroundColor $accent
+Write-Host ""
+Write-Host "  [1] Claude Code icin:" -ForegroundColor Yellow
+Write-Host "      cd $DEV_DIR\[proje]" -ForegroundColor $dim
+Write-Host "      .\start.ps1" -ForegroundColor $dim
+Write-Host ""
+Write-Host "  [2] Claude Desktop farkindалigi icin:" -ForegroundColor Yellow
+if (Test-Path $desktopConfig) {
+    Write-Host "      Filesystem MCP eklendi. Claude Desktop'i yeniden baslat." -ForegroundColor Green
+    Write-Host "      Sonra su promptu ver:" -ForegroundColor $dim
+    Write-Host "      'Read ~/.claude/CLAUDE.md and confirm ClaudeForge is active'" -ForegroundColor Cyan
+} else {
+    Write-Host "      claude.ai/claude.ai'da Projects ac" -ForegroundColor $dim
+    Write-Host "      Instructions alanina su dosyayi yapistir:" -ForegroundColor $dim
+    Write-Host "      $CLAUDE_DIR\CLAUDE.md" -ForegroundColor Cyan
+}
+Write-Host ""
+Write-Host "  [3] Ilk proje icin:" -ForegroundColor Yellow
+Write-Host "      .\start.ps1 calistir → model sec → bootstrap prompt yapistir" -ForegroundColor $dim
 Write-Host ""

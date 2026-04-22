@@ -4,3 +4,4 @@ node_modules/
 *.keystore
 .DS_Store
 Thumbs.db
+scripts/sync-skills.ps1
