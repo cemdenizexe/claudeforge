@@ -173,34 +173,23 @@ if (Test-Path $startSrc) {
 }
 npm install -g codeburn 2>$null; Write-Host "  CodeBurn ok" -ForegroundColor Green
 
-# Status bar
+# Status bar — leeguooooo/claude-code-usage-bar (WSL + Windows)
 Write-Host "  Status bar..." -ForegroundColor $dim -NoNewline
 $sj = Join-Path $CLAUDE_DIR "settings.json"
 $sbCommand = $null
 
-# npm global kur
-npm install -g ccstatusline 2>$null
-
-# WSL varsa PATH fix + absolute path kullan
 $HAS_WSL = $false
 try { $wslCheck = wsl --list --quiet 2>$null; if ($wslCheck) { $HAS_WSL = $true } } catch {}
 
 if ($HAS_WSL) {
-    # WSL'de npm global bin PATH'e ekle
-    wsl bash -lc 'grep -q npm-global ~/.bashrc || echo "export PATH=$HOME/.npm-global/bin:$PATH" >> ~/.bashrc' 2>$null
-    wsl bash -lc 'grep -q npm-global ~/.profile || echo "export PATH=$HOME/.npm-global/bin:$PATH" >> ~/.profile' 2>$null
-    # WSL'de ccstatusline kur
-    wsl bash -lc 'npm install -g ccstatusline 2>/dev/null' 2>$null
-    # Absolute path ile kaydet
-    $wslPath = wsl bash -lc 'which ccstatusline 2>/dev/null || echo "$HOME/.npm-global/bin/ccstatusline"' 2>$null
-    if ($wslPath) { $sbCommand = $wslPath.Trim() }
+    wsl bash -lc 'curl -fsSL "https://raw.githubusercontent.com/leeguooooo/claude-code-usage-bar/main/web-install.sh" | bash 2>/dev/null' 2>$null
+    $wslBin = wsl bash -lc 'which claude-code-usage-bar 2>/dev/null' 2>$null
+    if ($wslBin -and $wslBin.Trim()) { $sbCommand = $wslBin.Trim() }
 }
 
-# Windows fallback
 if (-not $sbCommand) {
-    $ccPath = (Get-Command "ccstatusline" -EA SilentlyContinue)?.Source
-    if ($ccPath) { $sbCommand = $ccPath }
-    elseif (Get-Command "ccstatusline" -EA SilentlyContinue) { $sbCommand = "ccstatusline" }
+    npm install -g claude-code-usage-bar 2>$null
+    if (Get-Command "claude-code-usage-bar" -EA SilentlyContinue) { $sbCommand = "claude-code-usage-bar" }
 }
 
 if ($sbCommand) {
@@ -297,4 +286,29 @@ Write-Host "      npx codeburn optimize" -ForegroundColor White
 Write-Host ""
 Write-Host "  Docs: https://github.com/cemdenizexe/claudeforge" -ForegroundColor $dim
 Write-Host "  MCP'ler: https://github.com/cemdenizexe/claudeforge/blob/main/docs/12-mcp-servers.md" -ForegroundColor $dim
+Write-Host ""
+Write-Host "  ================================================" -ForegroundColor $accent
+Write-Host "  HOSGELDIN" -ForegroundColor White
+Write-Host "  ================================================" -ForegroundColor $accent
+Write-Host ""
+Write-Host "  Ne degisti:" -ForegroundColor Yellow
+Write-Host "  Once : Bos terminal. Her session sifir." -ForegroundColor $dim
+Write-Host "  Simdi: 200+ skill. Hafiza. Guvenlik. Workflow." -ForegroundColor Green
+Write-Host ""
+Write-Host "  Maliyet azalt:" -ForegroundColor Yellow
+Write-Host '  $caveman    -- %65-75 token azalt' -ForegroundColor White
+Write-Host "  /compact    -- context dolunca sikistir" -ForegroundColor White
+Write-Host "  /model      -- basit is icin haiku sec" -ForegroundColor White
+Write-Host "  npx codeburn -- haftalik harcama raporu" -ForegroundColor White
+Write-Host ""
+Write-Host "  Skill tetikle:" -ForegroundColor Yellow
+Write-Host "  'spec this feature'    -- Feature Forge" -ForegroundColor $dim
+Write-Host "  'red team this'        -- The Fool" -ForegroundColor $dim
+Write-Host "  'reverse engineer'     -- Spec Miner" -ForegroundColor $dim
+Write-Host "  'scrape https://...'   -- Firecrawl" -ForegroundColor $dim
+Write-Host ""
+Write-Host "  Her session:" -ForegroundColor Yellow
+Write-Host "  .\start.ps1 -- calistir. Bootstrap yapistir. Calis." -ForegroundColor White
+Write-Host ""
+Write-Host "  Az token. Guvenli kod. Hizli is." -ForegroundColor Green
 Write-Host ""

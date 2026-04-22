@@ -1,23 +1,41 @@
 # ClaudeForge ⚒️
-### Claude Code'u profesyonel geliştirme ortamına dönüştür
 
-🇬🇧 [English](README.md) | 🇹🇷 [Türkçe](README.tr.md)
+**Claude Code için profesyonel geliştirici ortamı kurulum framework'ü**
 
-> Tek kurulum. 200+ skill. Güvenlik otopilotu. Kendi kendine öğrenen sistem. Multi-proje sync.
-> [cemdenizexe](https://github.com/cemdenizexe) tarafından geliştirildi.
+🇹🇷 [Türkçe](README.tr.md) | 🇬🇧 English
 
-## Ne işe yarar?
+> Tek komut. 200+ skill. Otomatik güvenlik. Session hafızası. GSD workflow.
 
-Claude Code'u kullanan çoğu geliştirici şunu yaşıyor:
-- 200+ skill yüklü ama hangisi ne zaman çalışır bilmiyor
-- Her session sıfırdan başlıyor, önceki hataları tekrarlıyor
-- `.env` dosyasını yanlışlıkla commit ediyor
-- Token israf ediyor çünkü her iş için aynı modeli kullanıyor
-- 10 projesi var ama her birinde farklı config
+---
 
-**ClaudeForge bunların hepsini çözer.**
+## Ne yapar?
 
-## Hızlı kurulum (5 dakika)
+ClaudeForge, Anthropic'in Claude Code'unu kutudan çıkardığınız haliyle değil — profesyonel bir geliştirici ortamı olarak kurar.
+
+**Kurulmadan önce:** Boş terminal. Her session sıfırdan başlar. Claude projenizi tanımaz.
+
+**Kurulduktan sonra:** 200+ skill aktif. Güvenlik otomatik çalışır. Session hafızası var. GSD workflow hazır.
+
+ClaudeForge kendi başına bir ürün değildir. Şu araçları sizin cihazınıza kurar ve yapılandırır:
+- [Claude Code](https://github.com/anthropics/claude-code) — Anthropic'in terminal AI aracı
+- [GSD](https://github.com/softworks427/get-shit-done) — Workflow engine (70+ komut)
+- [claude-mem](https://github.com/thedotmack/claude-mem) — Session hafızası
+- [Caveman](https://github.com/JuliusBrussee/caveman) — %65-75 token tasarrufu
+- Ve 200+ skill/plugin
+
+ClaudeForge bu araçların sahibi değildir. Her aracın kendi lisansı geçerlidir.
+
+---
+
+## Sorumluluk Reddi
+
+ClaudeForge, kurduğu üçüncü taraf araçların güvenliği veya gizliliği konusunda garanti vermez. MCP server'lar yerel makinenizde çalışır ve dosya sisteminize erişebilir. Kurulum öncesinde araçların kaynak kodunu incelemenizi öneririz.
+
+---
+
+## Kurulum (5 dakika)
+
+**Gereksinimler:** Node.js, Git, Claude Code
 
 ```powershell
 git clone https://github.com/cemdenizexe/claudeforge.git
@@ -25,64 +43,91 @@ cd claudeforge
 powershell -ExecutionPolicy Bypass -File scripts/setup.ps1
 ```
 
-Wizard soracak:
-1. Projelerinin klasörü (ör: `D:\Dev`)
-2. Adın
-3. Caveman ister misin? (%65-75 token tasarrufu)
-4. Video pipeline ister misin? (Seedance 2.0, SEO, YouTube)
+Setup sırasında sorulacaklar:
+1. Projelerinizin bulunduğu klasör (`D:\Dev`, `C:\code` vb.)
+2. İsminiz (CLAUDE.md kimliği için)
+3. Caveman kurulsun mu? (token tasarrufu)
+4. Video pipeline kurulsun mu? (Seedance, SEO, YouTube)
+5. GSD kurulsun mu? (workflow engine)
+
+---
+
+## Kurulumdan Sonra
+
+### Claude Code ile kullanım
+
+Her projede:
+```powershell
+cd [proje-klasoru]
+.\start.ps1
+```
+
+Bootstrap prompt yapıştırın (clipboard'a kopyalanır). Claude projeyi tanır, sıfırdan anlatmak gerekmez.
+
+### Claude Desktop / claude.ai farkındalığı
+
+Setup sırasında `ecosystem-awareness.md` içeriği clipboard'a kopyalanır.
+
+**claude.ai kullanıyorsanız:** Projects → Instructions → Ctrl+V
+
+**Claude Desktop kullanıyorsanız:** Filesystem MCP setup sırasında otomatik eklenir. Desktop'ı yeniden başlatın.
+
+---
 
 ## Özellikler
 
-### ⚡ Task Router — akıllı model seçimi
-Her görev geldiğinde Claude otomatik analiz eder:
-- Basit iş → Haiku (hızlı, ucuz)
-- Orta iş → Sonnet (dengeli)
-- Karmaşık → Opus (kaliteli)
-- 3+ dosya paralel → Swarm (çoklu agent)
+| Özellik | Ne yapar | Nasıl kullanılır |
+|---------|----------|-----------------|
+| **GSD Workflow** | Plan→Execute→Review→Ship | `gsd plan`, `gsd execute`, `gsd ship` |
+| **Caveman** | %65-75 token tasarrufu | `$caveman` yazın |
+| **Security** | Her düzenlemede otomatik güvenlik taraması | Kendiliğinden çalışır |
+| **claude-mem** | Session hafızası, geçmiş kararlar | Otomatik, `localhost:37777` |
+| **Status Bar** | Rate limit, context, model bilgisi | Altta otomatik görünür |
+| **Skill'ler** | 200+ uzman yetenek | Tetikleyici cümle söyleyin |
 
-### 🛡️ Güvenlik otopilotu
-- Her edit'te XSS, injection, hardcoded secret taraması
-- `git add .` yaparken `.env` otomatik engellenir
-- `.gitignore` eksikse commit bloklanır
-- Tüm bunlar otomatik — token harcamaz
+---
 
-### 🧠 Kendi kendine öğrenme
-- Bug fix commit'leri otomatik loglanır
-- Sonraki session'da Claude geçmiş hataları görür
-- Aynı hatayı tekrarlamaz
-- CLAUDE.md şişmez — ayrı `learnings.md` dosyası
+## Skill Tetikleme
 
-### 🔄 Multi-proje sync
-- 1 template → tüm projelerine sync
-- Yeni proje 30 saniyede hazır
-- Skill ekleyince otomatik algılanır (hook)
+Claude'a ne söylerseniz ilgili skill devreye girer:
 
-### 📊 Token dashboard
-```powershell
-npx codeburn        # 7 günlük kullanım
-npx codeburn today  # bugünkü
+```
+"spec this feature"        → Feature Forge (gereksinim analizi)
+"design this system"       → Architecture Designer
+"red team this"            → The Fool (hata avcısı)
+"reverse engineer this"    → Spec Miner (kod analizi)
+"design this API"          → API Designer
+"scrape https://..."       → Firecrawl (web scraping)
 ```
 
-## Dökümanlar
+---
 
-| Rehber | Ne öğreneceksin |
-|--------|----------------|
-| [00 — Kullanım rehberi](docs-tr/00-kullanim-rehberi.md) | Günlük workflow, 8 senaryo |
-| [01 — Başlangıç](docs-tr/01-baslangic.md) | Kurulum, ilk proje |
-| [02 — Skill sistemi](docs-tr/02-skill-sistemi.md) | SKILL.md, nasıl kurulur |
-| [03 — Plugin vs Skill](docs-tr/03-plugin-vs-skill.md) | Fark ve neden önemli |
-| [04 — GSD Workflow](docs-tr/04-gsd-workflow.md) | 70+ komut, Plan-Execute-Ship |
-| [05 — Connector & MCP](docs-tr/05-connector-mcp.md) | Browser bağlantıları |
-| [06 — CLAUDE.md mühendisliği](docs-tr/06-claude-md.md) | Global vs local |
-| [07 — Güvenlik](docs-tr/07-guvenlik.md) | Vibe coding hayatta kalma rehberi |
-| [08 — Multi-proje](docs-tr/08-multi-proje.md) | 10+ proje yönetimi |
-| [09 — Video pipeline](docs-tr/09-video-pipeline.md) | Remotion + Seedance 2.0 |
-| [10 — Browser-Desktop köprüsü](docs-tr/10-browser-desktop.md) | İki Claude birlikte |
+## Maliyet Azaltma
 
-## Katkıda bulun
+```
+$caveman              → Her session'da yazın. %65-75 token azalır.
+/compact              → Context penceresi dolunca sıkıştırır.
+/model                → Basit işler için haiku seçin.
+npx codeburn          → Haftalık token harcama raporu.
+```
 
-PR'lar açık. Faydalı skill, workflow veya config bulduysanız paylaşın.
+---
+
+## Dokümantasyon
+
+| Rehber | İçerik |
+|--------|--------|
+| [Başlangıç](docs/01-getting-started.md) | İlk proje, temel komutlar |
+| [CLAUDE.md](docs/06-claude-md-engineering.md) | Nasıl çalışır, ne içerir |
+| [Skill Sistemi](docs/02-skills-system.md) | Skill nedir, nasıl kurulur |
+| [GSD Workflow](docs/04-gsd-workflow.md) | Günlük iş akışı |
+| [Güvenlik](docs/07-security.md) | Otomatik hook'lar |
+| [Multi-Proje](docs/08-multi-project.md) | 10+ proje yönetimi |
+| [Context Takibi](docs/11-health-check.md) | claude-mem, codeburn, status bar |
+| [MCP Sunucuları](docs/12-mcp-servers.md) | Önerilen MCP'ler, kurulum |
+
+---
 
 ## Lisans
 
-MIT
+MIT — ClaudeForge kodu için. Yüklenen araçların kendi lisansları geçerlidir.

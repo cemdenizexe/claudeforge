@@ -1,37 +1,41 @@
 # ClaudeForge ⚒️
-### Claude Code için üretim-hazır geliştirici ortamı
 
-🇬🇧 [English](README.md) | 🇹🇷 [Türkçe](README.tr.md)
+**Professional developer environment setup framework for Claude Code**
 
-> Tek kurulum. 200+ skill. Otomatik güvenlik. Self-learning hafıza. Multi-project sync.
+🇬🇧 English | 🇹🇷 [Türkçe](README.tr.md)
 
----
-
-## Bu nedir?
-
-ClaudeForge; Anthropic'in Claude Code'unu, mevcut açık kaynak araçları, skill'ler ve hook'ları bir araya getirerek profesyonel bir geliştirici ortamına dönüştüren bir **kurulum framework'ü**dür.
-
-Kendi başına bir ürün değildir. Aşağıdaki araçları senin cihazına kurar ve yapılandırır:
-- [Claude Code](https://github.com/anthropics/claude-code) — Anthropic'in terminal AI aracı
-- [GSD](https://github.com/softworks427/get-shit-done) — workflow engine
-- [claude-mem](https://github.com/thedotmack/claude-mem) — session hafızası
-- [Caveman](https://github.com/JuliusBrussee/caveman) — token tasarrufu
-- [Superpowers](https://github.com/obra/superpowers) — paralel agent framework
-- Ve 200+ başka skill/plugin
-
-ClaudeForge bu araçların sahibi değildir. Her aracın kendi lisansı geçerlidir.
+> One command. 200+ skills. Automatic security. Session memory. GSD workflow.
 
 ---
 
-## Sorumluluk Reddi
+## What does it do?
 
-> **ÖNEMLİ:** ClaudeForge, yüklediği üçüncü taraf araçların (MCP server'lar, plugin'ler, skill'ler) güvenliği, gizliliği veya güvenilirliği konusunda hiçbir garanti vermez ve sorumluluk kabul etmez. Kurulum öncesinde ilgili araçların kaynak kodunu ve lisanslarını incelemenizi öneririz. MCP server'lar yerel makinenizde çalışır ve dosya sisteminize, ağ bağlantılarınıza veya ortam değişkenlerinize erişebilir. Bilinçli kurulum yapın.
+ClaudeForge installs and configures Claude Code as a professional development environment — not just an empty terminal.
+
+**Before:** Blank terminal. Every session starts from zero. Claude doesn't know your project.
+
+**After:** 200+ skills active. Security runs automatically. Session memory works. GSD workflow ready.
+
+ClaudeForge is not a standalone product. It installs and configures these tools on your machine:
+- [Claude Code](https://github.com/anthropics/claude-code) — Anthropic's terminal AI tool
+- [GSD](https://github.com/softworks427/get-shit-done) — Workflow engine (70+ commands)
+- [claude-mem](https://github.com/thedotmack/claude-mem) — Session memory
+- [Caveman](https://github.com/JuliusBrussee/caveman) — 65-75% token savings
+- And 200+ skills/plugins
+
+ClaudeForge does not own these tools. Each has its own license.
 
 ---
 
-## Hızlı Başlangıç (5 dakika)
+## Disclaimer
 
-**Gereksinimler:** Node.js, Git, Claude Code
+ClaudeForge provides no guarantees about the security or privacy of third-party tools it installs. MCP servers run on your local machine and may access your file system. Review tool source code before installation.
+
+---
+
+## Installation (5 minutes)
+
+**Requirements:** Node.js, Git, Claude Code
 
 ```powershell
 git clone https://github.com/cemdenizexe/claudeforge.git
@@ -39,53 +43,91 @@ cd claudeforge
 powershell -ExecutionPolicy Bypass -File scripts/setup.ps1
 ```
 
-Wizard sorar:
-1. Projelerinizin dizini (`D:\Dev`, `C:\code` vb.)
-2. İsminiz (CLAUDE.md kimliği için)
-3. Caveman kurulsun mu? (token tasarrufu)
-4. Video pipeline kurulsun mu? (Seedance, SEO, YouTube)
-5. GSD kurulsun mu? (workflow engine)
-
-Sonra otomatik: 16 plugin + skill'ler + security hook'ları + GSD + global CLAUDE.md.
+The wizard will ask:
+1. Your projects directory (`D:\Dev`, `C:\code`, etc.)
+2. Your name (for CLAUDE.md identity)
+3. Install Caveman? (token savings)
+4. Install video pipeline? (Seedance, SEO, YouTube)
+5. Install GSD? (workflow engine)
 
 ---
 
-## Kurulumdan Sonra
+## After Installation
 
-Setup tamamlandığında terminal şunu gösterir:
+### Using with Claude Code
 
-```
-ClaudeForge setup complete!
-
-Installed:
-  Plugins      16
-  Skills       caveman + GSD + seçtikleriniz
-  Hooks        session-start, sensitive-file-guard, self-learning, skill-discovery
-  Config       Global CLAUDE.md oluşturuldu
-
-Quick start:
-  cd [proje-dizini]
-  .\start.ps1
-  → Bootstrap prompt clipboard'a kopyalanır, yapıştır
+For each project:
+```powershell
+cd [project-folder]
+.\start.ps1
 ```
 
----
+Paste the bootstrap prompt (copied to clipboard). Claude knows your project instantly.
 
-## Dokümantasyon
+### Claude Desktop / claude.ai awareness
 
-| Rehber | İçerik |
-|--------|--------|
-| [Başlangıç](docs/01-getting-started.md) | İlk proje, temel komutlar |
-| [CLAUDE.md Rehberi](docs/06-claude-md-engineering.md) | Ne işe yarar, nasıl çalışır |
-| [Skill Sistemi](docs/02-skills-system.md) | Skill nedir, nasıl kurulur |
-| [GSD Workflow](docs/04-gsd-workflow.md) | Günlük iş akışı |
-| [Güvenlik](docs/07-security.md) | Otomatik hook'lar, riskler |
-| [Multi-Project](docs/08-multi-project.md) | 10+ proje yönetimi |
-| [Context Takibi](docs/11-health-check.md) | claude-mem, codeburn, status bar |
-| [MCP Sunucuları](docs/12-mcp-servers.md) | Önerilen MCP'ler, kurulum komutları |
+During setup, `ecosystem-awareness.md` content is copied to clipboard.
+
+**claude.ai:** Projects → Instructions → Ctrl+V
+
+**Claude Desktop:** Filesystem MCP is added automatically. Restart Desktop.
 
 ---
 
-## Lisans
+## Features
 
-MIT — ClaudeForge kodu için. Yüklenen araçların kendi lisansları geçerlidir.
+| Feature | What it does | How to use |
+|---------|-------------|------------|
+| **GSD Workflow** | Plan→Execute→Review→Ship | `gsd plan`, `gsd execute`, `gsd ship` |
+| **Caveman** | 65-75% token savings | Type `$caveman` |
+| **Security** | Auto security scan on every edit | Runs automatically |
+| **claude-mem** | Session memory, past decisions | Automatic, `localhost:37777` |
+| **Status Bar** | Rate limit, context, model info | Appears at bottom automatically |
+| **Skills** | 200+ expert capabilities | Say the trigger phrase |
+
+---
+
+## Skill Triggers
+
+Whatever you tell Claude activates the relevant skill:
+
+```
+"spec this feature"        → Feature Forge (requirements analysis)
+"design this system"       → Architecture Designer
+"red team this"            → The Fool (find what breaks)
+"reverse engineer this"    → Spec Miner (code analysis)
+"design this API"          → API Designer
+"scrape https://..."       → Firecrawl (web scraping)
+```
+
+---
+
+## Cost Reduction
+
+```
+$caveman              → Write every session. 65-75% token reduction.
+/compact              → Compress when context window fills up.
+/model                → Switch to haiku for simple tasks.
+npx codeburn          → Weekly token spend report.
+```
+
+---
+
+## Documentation
+
+| Guide | Content |
+|-------|---------|
+| [Getting Started](docs/01-getting-started.md) | First project, basic commands |
+| [CLAUDE.md](docs/06-claude-md-engineering.md) | How it works, what it contains |
+| [Skills System](docs/02-skills-system.md) | What skills are, how to install |
+| [GSD Workflow](docs/04-gsd-workflow.md) | Daily workflow |
+| [Security](docs/07-security.md) | Automatic hooks |
+| [Multi-Project](docs/08-multi-project.md) | Managing 10+ projects |
+| [Context Tracking](docs/11-health-check.md) | claude-mem, codeburn, status bar |
+| [MCP Servers](docs/12-mcp-servers.md) | Recommended MCPs, install commands |
+
+---
+
+## License
+
+MIT — for ClaudeForge code. Installed tools have their own licenses.
