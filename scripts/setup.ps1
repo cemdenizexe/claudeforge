@@ -166,7 +166,7 @@ $hookConfig = @{
 
 try {
     $raw = if (Test-Path $settingsJson) { Get-Content $settingsJson -Raw } else { '{}' }
-    $raw = $raw -replace '(?m)^\s*//.*$','' -replace ',(\s*[}\]])',('$1')
+    $raw = $raw -replace '(?m)^\s*//[^\n]*',''
     $existing = $raw | ConvertFrom-Json
     if (-not $existing.hooks) {
         $existing | Add-Member -NotePropertyName "hooks" -NotePropertyValue $hookConfig.hooks -Force
