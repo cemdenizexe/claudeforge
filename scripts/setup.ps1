@@ -6,25 +6,30 @@ $accent = "DarkYellow"
 $dim = "DarkGray"
 
 Write-Host ""
-Write-Host "   ██████╗██╗      █████╗ ██╗   ██╗██████╗ ███████╗" -ForegroundColor DarkYellow
-Write-Host "  ██╔════╝██║     ██╔══██╗██║   ██║██╔══██╗██╔════╝" -ForegroundColor DarkYellow
-Write-Host "  ██║     ██║     ███████║██║   ██║██║  ██║█████╗  " -ForegroundColor DarkYellow
-Write-Host "  ██║     ██║     ██╔══██║██║   ██║██║  ██║██╔══╝  " -ForegroundColor DarkYellow
-Write-Host "  ╚██████╗███████╗██║  ██║╚██████╔╝██████╔╝███████╗" -ForegroundColor DarkYellow
-Write-Host "   ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝╚══════╝" -ForegroundColor DarkYellow
-Write-Host ""
-Write-Host "  ███████╗ ██████╗ ██████╗  ██████╗ ███████╗" -ForegroundColor Yellow
-Write-Host "  ██╔════╝██╔═══██╗██╔══██╗██╔════╝ ██╔════╝" -ForegroundColor Yellow
-Write-Host "  █████╗  ██║   ██║██████╔╝██║  ███╗█████╗  " -ForegroundColor Yellow
-Write-Host "  ██╔══╝  ██║   ██║██╔══██╗██║   ██║██╔══╝  " -ForegroundColor Yellow
-Write-Host "  ██║     ╚██████╔╝██║  ██║╚██████╔╝███████╗" -ForegroundColor Yellow
-Write-Host "  ╚═╝      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚══════╝" -ForegroundColor Yellow
-Write-Host ""
-Write-Host "                    by cemdenizexe" -ForegroundColor White
-Write-Host ""
-Write-Host "  200+ skills | Security autopilot | Self-learning" -ForegroundColor $dim
-Write-Host ""
-Write-Host "  ------------------------------------------------" -ForegroundColor $dim
+Write-Host "  +===========================================================+" -ForegroundColor DarkYellow
+Write-Host "  |                                                           |" -ForegroundColor DarkYellow
+Write-Host "  |   _____ _                 _      ______                  |" -ForegroundColor DarkYellow
+Write-Host "  |  / ____| |               | |    |  ____|                 |" -ForegroundColor DarkYellow
+Write-Host "  | | |    | | __ _ _   _  __| | ___| |__ ___  _ __ __ _  __|" -ForegroundColor DarkYellow
+Write-Host "  | | |    | |/ _  | | | |/ _  |/ _ \  __/ _ \| '__/ _  |/ _|" -ForegroundColor DarkYellow
+Write-Host "  | | |____| | (_| | |_| | (_| |  __/ | | (_) | | | (_| |  _|" -ForegroundColor DarkYellow
+Write-Host "  |  \_____|_|\__,_|\__,_|\__,_|\___|_|  \___/|_|  \__, |\__|" -ForegroundColor DarkYellow
+Write-Host "  |                                                  __/ |    |" -ForegroundColor DarkYellow
+Write-Host "  |                                                 |___/     |" -ForegroundColor DarkYellow
+Write-Host "  |                                    by cemdenizexe         |" -ForegroundColor White
+Write-Host "  |                                                           |" -ForegroundColor DarkYellow
+Write-Host "  +-----------------------------------------------------------+" -ForegroundColor DarkYellow
+Write-Host "  |  One command. 200+ skills. Security. Memory. Workflow.   |" -ForegroundColor White
+Write-Host "  +-----------------------------------------------------------+" -ForegroundColor DarkYellow
+Write-Host "  |                                                           |" -ForegroundColor DarkYellow
+Write-Host "  |  [01] 200+ SKILLS     Preloaded AI capabilities          |" -ForegroundColor $dim
+Write-Host "  |  [02] SECURITY        Auto scan on every edit            |" -ForegroundColor $dim
+Write-Host "  |  [03] SESSION MEMORY  Context persists across sessions   |" -ForegroundColor $dim
+Write-Host "  |  [04] GSD WORKFLOW    Plan. Execute. Review. Ship.       |" -ForegroundColor $dim
+Write-Host "  |  [05] CAVEMAN MODE    65-75% token savings               |" -ForegroundColor $dim
+Write-Host "  |  [06] STATUS BAR      Real-time token + rate limit       |" -ForegroundColor $dim
+Write-Host "  |                                                           |" -ForegroundColor DarkYellow
+Write-Host "  +-----------------------------------------------------------+" -ForegroundColor DarkYellow
 Write-Host ""
 
 # --- Environment Detection ---
