@@ -173,47 +173,36 @@ if (Test-Path $startSrc) {
 }
 npm install -g codeburn 2>$null; Write-Host "  CodeBurn ok" -ForegroundColor Green
 
-# Status bar — WSL + Windows uyumlu
+# Status bar
 Write-Host "  Status bar..." -ForegroundColor $dim -NoNewline
 $sj = Join-Path $CLAUDE_DIR "settings.json"
-$sbInstalled = $false
+$sbCommand = $null
 
-# Önce leeguooooo/claude-code-usage-bar dene (WSL + Windows)
-try {
+# 1. ccstatusline dene
+npm install -g ccstatusline 2>$null
+$test = ccstatusline 2>$null
+if ($LASTEXITCODE -eq 0 -or $test) { $sbCommand = "ccstatusline" }
+
+# 2. claude-code-usage-bar dene
+if (-not $sbCommand) {
     npm install -g claude-code-usage-bar 2>$null
-    $testOut = & claude-code-usage-bar 2>$null
-    if ($LASTEXITCODE -eq 0 -or $testOut) {
-        $sbInstalled = $true
-        $sbCommand = "claude-code-usage-bar"
-    }
-} catch {}
-
-# Çalışmazsa daniel3303/ClaudeCodeStatusLine dene (Windows only)
-if (-not $sbInstalled) {
-    $sbDir = Join-Path $HOME_DIR ".claude\statusline"
-    if (-not (Test-Path $sbDir)) {
-        git clone --depth 1 https://github.com/daniel3303/ClaudeCodeStatusLine.git $sbDir 2>$null
-    }
-    $sbScript = Join-Path $sbDir "statusline.ps1"
-    if (Test-Path $sbScript) {
-        $sbInstalled = $true
-        $sbCommand = "powershell -NonInteractive -File `"$sbScript`""
-    }
+    $test2 = claude-code-usage-bar 2>$null
+    if ($LASTEXITCODE -eq 0 -or $test2) { $sbCommand = "claude-code-usage-bar" }
 }
 
-if ($sbInstalled) {
+# 3. Bulunduysa settings.json'a yaz
+if ($sbCommand) {
     try {
-        $sc = Get-Content $sj -Raw | ConvertFrom-Json
+        $sc = Get-Content $sj -Raw -EA SilentlyContinue | ConvertFrom-Json
+        if (-not $sc) { $sc = [PSCustomObject]@{} }
         if (-not $sc.statusLine) {
-            $sc | Add-Member -NotePropertyName "statusLine" -NotePropertyValue @{
-                type = "command"; command = $sbCommand
-            } -Force
+            $sc | Add-Member -NotePropertyName "statusLine" -NotePropertyValue @{ type="command"; command=$sbCommand } -Force
             $sc | ConvertTo-Json -Depth 5 | Set-Content $sj -Encoding UTF8
         }
         Write-Host " ok ($sbCommand)" -ForegroundColor Green
-    } catch { Write-Host " skipped (settings parse error)" -ForegroundColor DarkYellow }
+    } catch { Write-Host " settings write failed" -ForegroundColor DarkYellow }
 } else {
-    Write-Host " skipped (no compatible status bar found)" -ForegroundColor DarkYellow
+    Write-Host " skipped" -ForegroundColor DarkYellow
 }
 
 $desktopConfig = "$env:APPDATA\Claude\claude_desktop_config.json"
@@ -273,6 +262,19 @@ Write-Host "  +----------------------------------------------------------+" -For
 Write-Host ""
 $p = "Read CLAUDE.md. List active skills, hooks, GSD status. Confirm ClaudeForge is active. Report what you see."
 try { $p | Set-Clipboard; Write-Host "  (Clipboard'a kopyalandi)" -ForegroundColor Green } catch {}
+Write-Host ""
+Write-Host "  [2b] claude.ai Projects farkindалigi icin ecosystem-awareness.md:" -ForegroundColor Yellow
+$ecoFile = Join-Path $TEMPLATES_DIR "ecosystem-awareness.md"
+if (Test-Path $ecoFile) {
+    try {
+        Get-Content $ecoFile -Raw | Set-Clipboard
+        Write-Host "      Dosya clipboard'a kopyalandi." -ForegroundColor Green
+        Write-Host "      claude.ai -- Projects -- Instructions -- Ctrl+V" -ForegroundColor White
+    } catch {
+        Write-Host "      Dosya: $ecoFile" -ForegroundColor $dim
+        Write-Host "      Icerigini Projects > Instructions'a yapistir." -ForegroundColor $dim
+    }
+}
 Write-Host ""
 Write-Host "  [3] Token tasarrufu:" -ForegroundColor Yellow
 Write-Host '      $caveman yaz' -ForegroundColor White
