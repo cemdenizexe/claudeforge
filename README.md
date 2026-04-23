@@ -124,6 +124,7 @@ npx codeburn          → Weekly token spend report.
 | [Security](docs/07-security.md) | Automatic hooks |
 | [Multi-Project](docs/08-multi-project.md) | Managing 10+ projects |
 | [Context Tracking](docs/11-health-check.md) | claude-mem, codeburn, status bar |
+| [Skills Library](docs/skills-library.md) | Skill nedir, nasıl çalışır, kategori listesi |
 | [MCP Servers](docs/12-mcp-servers.md) | Recommended MCPs, install commands |
 | [Project Instructions](templates/project-instructions.md) | Ready-to-use instructions template for any project |
 
