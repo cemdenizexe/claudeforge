@@ -25,7 +25,30 @@ process.stdin.on('end', () => {
         const toolInput = data.tool_input || {};
         const toolOutput = data.tool_output || '';
 
-        // Only process after Bash (git commit) completes
+        // Detect bash errors and log them
+        if (toolName === 'Bash') {
+            const exitCode = data.tool_output?.exit_code;
+            const stderr = data.tool_output?.stderr || '';
+            
+            if (exitCode && exitCode !== 0 && stderr) {
+                const date = new Date().toISOString().split('T')[0];
+                const errorEntry = `\n- [${date}] [ERROR] cmd: ${command.slice(0,80)} | exit:${exitCode} | ${stderr.split('\n')[0].slice(0,120)}`;
+                
+                const learningsPath = path.join(process.cwd(), '.claude', 'learnings.md');
+                const learningsDir = path.dirname(learningsPath);
+                if (!fs.existsSync(learningsDir)) fs.mkdirSync(learningsDir, { recursive: true });
+                if (!fs.existsSync(learningsPath)) {
+                    fs.writeFileSync(learningsPath, '# Project Learnings\n\n## Errors\n' + errorEntry + '\n');
+                } else {
+                    if (!fs.readFileSync(learningsPath,'utf8').includes(stderr.slice(0,50))) {
+                        fs.appendFileSync(learningsPath, errorEntry + '\n');
+                    }
+                }
+                process.exit(0);
+            }
+        }
+
+        // Only process git commits below
         if (toolName !== 'Bash') process.exit(0);
 
         const command = toolInput.command || '';
