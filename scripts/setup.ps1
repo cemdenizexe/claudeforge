@@ -108,6 +108,7 @@ try {
             SessionStart = @(@{ hooks = @(@{ type="command"; command="node `"$hf/session-start.js`"" }) })
             PreToolUse   = @(@{ matcher="Edit|Write|MultiEdit"; hooks = @(@{ type="command"; command="node `"$hf/sensitive-file-guard.js`""; timeout=5 }) })
             PostToolUse  = @(@{ matcher="Bash"; hooks = @(@{ type="command"; command="node `"$hf/self-learning.js`""; timeout=5 }) })
+            Notification = @(@{ hooks = @(@{ type="command"; command="powershell.exe -WindowStyle Hidden -Command `"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Claude Code needs your input in: ' + (Get-Location).Path, 'Claude Code', 'OK', 'Information')`"" }) })
         } -Force
         $ex | ConvertTo-Json -Depth 10 | Set-Content $SJ -Encoding UTF8
         Write-Host "  Hooks wired." -ForegroundColor Green
