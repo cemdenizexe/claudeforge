@@ -47,6 +47,15 @@ Her görevde, kodlamadan önce tek satır yaz:
 | 3+ dosya paralel | opus | evet (3-5) |
 | Tam audit, büyük refactor | opus | evet (5-8) |
 
+**Auto-routing zorunlu:** Görevi oku → model seç → `[ROUTE]` yaz → başla. Sormadan.
+Scope genişlerse → yeniden route, duyur, devam et.
+
+**Swarm agent atamaları:**
+- Orchestrator → opus
+- Kod yazanlar → sonnet
+- Lint/format/validate → haiku
+- Araştırma/analiz → sonnet
+
 ---
 
 ## GSD Workflow
