@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//mnt/c/Users/cdcem/pipx/venvs/uv/Scripts/**)",
+      "Bash(powershell.exe -NoProfile -Command \"[Environment]::GetEnvironmentVariable\\('PATH','User'\\)\")",
+      "Bash(powershell.exe *)"
+    ]
+  }
+}

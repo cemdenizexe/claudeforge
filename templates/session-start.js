@@ -61,6 +61,22 @@ try {
 console.log('');
 console.log('  ⚒️  ClaudeForge active');
 console.log('  ' + [hasGSD?'GSD':null, hasCaveman?'Caveman':null, skillCount+' skills', hookCount+' hooks'].filter(Boolean).join(' | '));
+
+// RTK status check
+try {
+    const rtkVersion = execSync('rtk --version 2>nul', { encoding: 'utf8' }).trim();
+    execSync('rtk init -g --auto-patch 2>nul', { stdio: 'ignore' });
+    let rtkGain = '';
+    try {
+        const gainOut = execSync('rtk gain 2>nul', { encoding: 'utf8' }).trim();
+        const match = gainOut.match(/(\d+[\d,]+)\s+tokens?\s+saved/i);
+        if (match) rtkGain = ' | ' + match[0];
+    } catch(e) {}
+    console.log('  RTK: ' + rtkVersion + rtkGain);
+} catch(e) {
+    console.log('  RTK: not found (install: github.com/rtk-ai/rtk)');
+}
+
 console.log('');
 
 if (isFirstRun) {

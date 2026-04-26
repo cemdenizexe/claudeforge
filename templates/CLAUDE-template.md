@@ -78,6 +78,29 @@ Hook'lar otomatik tetiklenir — her edit, commit, session başında.
 # ARAÇ KILAVUZU — Hangi araç ne işe yarar?
 # ============================================================
 
+## RTK — Bash Output Compression (Auto)
+
+RTK intercepts every Bash call, compresses output 60-90% before Claude sees it.
+Binary: C:\tools\rtk\rtk.exe — installed, in PATH.
+
+Commands Claude must use instead of raw equivalents:
+- git → `rtk git [status|diff|log|add|commit|push|pull]`
+- cat/head/tail → `rtk read <file>`
+- rg/grep → `rtk grep <pattern>`
+- ls → `rtk ls`
+- pytest → `rtk pytest`
+- cargo test/build/clippy → `rtk cargo [test|build|clippy]`
+- npm test / npm run build → `rtk err npm run build`
+- ruff check → `rtk ruff check`
+- docker ps/images/logs → `rtk docker [ps|images|logs]`
+- tsc → `rtk tsc`
+- eslint/biome → `rtk lint`
+
+IMPORTANT: Claude Code built-in Read/Grep/Glob bypass hook.
+Use shell commands (cat, rg, find) — RTK auto-intercepts those.
+
+Stats: `rtk gain` | Missed savings: `rtk discover --since 1`
+
 ## $caveman — Token Tasarrufu
 
 Ne yapar: Claude'un cevaplarını %65-75 kısaltır. Aynı iş, çok daha az token.
@@ -205,6 +228,7 @@ Kendi hook'un için şablon: templates/self-learning.js
 
 ### Token tasarrufu
 - Caveman ($caveman), /compact
+- RTK — her Bash komutundan önce otomatik devreye girer, %60-90 output sıkıştırır
 
 ---
 

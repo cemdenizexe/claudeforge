@@ -30,5 +30,12 @@ try {
 Write-Host ""
 Write-Host "  Launching Claude Code..." -ForegroundColor Yellow
 Write-Host ""
+
+# RTK session stats
+try {
+    $rtkGain = (rtk gain 2>$null) | Select-String "tokens saved"
+    if ($rtkGain) { Write-Host "  RTK: $rtkGain" -ForegroundColor DarkGreen }
+} catch {}
+
 Set-Location $PROJECT_DIR
 claude
