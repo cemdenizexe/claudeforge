@@ -91,9 +91,15 @@ foreach ($s in $skills) {
 }
 if ($USE_GSD -eq 'y') { Write-Host "  GSD..." -ForegroundColor $dim; npx get-shit-done-cc@latest --claude --global 2>$null; Write-Host "  GSD ok" -ForegroundColor Green }
 
+# Graphify
+Write-Host "  Graphify..." -NoNewline -ForegroundColor $dim
+pip install graphifyy 2>$null
+graphify install --platform windows 2>$null
+Write-Host " ok" -ForegroundColor Green
+
 # --- [6/9] Hooks ---
 Write-Host "[6/9] Hooks..." -ForegroundColor Yellow
-foreach ($h in @("sensitive-file-guard.js","self-learning.js","skill-discovery.js","session-start.js","update-check.js")) {
+foreach ($h in @("sensitive-file-guard.js","self-learning.js","skill-discovery.js","session-start.js","update-check.js","graphify-hint.js")) {
     $s = Join-Path $PARENT_ROOT "templates\$h"; $d = Join-Path $HOOKS_DIR $h
     if (Test-Path $s) { Copy-Item $s $d -Force; Write-Host "  $h" -ForegroundColor Green }
 }
