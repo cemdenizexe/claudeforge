@@ -31,6 +31,22 @@ npx codeburn optimize
 | No read-before-edit | Rule in Global CLAUDE.md |
 | Bash output too high | BASH_MAX_OUTPUT_LENGTH=15000 recommended |
 
+## Known Hook Issues & Fixes
+
+### PreToolUse:Edit hook error — ClaudeForge + Superpowers
+
+**Symptom:** `PreToolUse:Edit hook error` on every Write/Edit tool call.
+
+**Root cause:** `gsd-read-guard.js` exits cleanly when `CLAUDECODE` or `CLAUDE_SESSION_ID` env vars are set. ClaudeForge + Superpowers doesn't set these → hook fires advisory output → Claude Code interprets as error.
+
+**Fix:**
+```powershell
+[System.Environment]::SetEnvironmentVariable("CLAUDECODE", "1", "User")
+```
+Restart terminal. Persists across sessions.
+
+**Affected:** `gsd-read-guard.js` v1.38.1+, ClaudeForge + Superpowers setups.
+
 ## Interpreting "ghost skills"
 
 GSD skills may appear as "unused" because they trigger contextually, not via direct invocation. Don't archive GSD skills — it breaks the workflow. Only archive skills you're SURE aren't being used (e.g. algorithmic-art if you never make generative art).
