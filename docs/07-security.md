@@ -59,6 +59,25 @@ These hooks fire on every edit/write in Claude Code:
 | eval() / pickle.loads | Convenience | Explicit parsing |
 | Committing .env | Forgot .gitignore | Pre-commit hook |
 
+## Known Issues & Fixes
+
+### PreToolUse:Edit Hook Error (gsd-read-guard.js)
+
+**Symptom:** Claude Code throws `PreToolUse:Edit hook error` on every file edit. Agents still complete but the error repeats constantly.
+
+**Root cause:** `gsd-read-guard.js` checks for `CLAUDECODE` or `CLAUDE_SESSION_ID` env variables to detect Claude Code and skip its advisory output. When running ClaudeForge + Superpowers, these variables are not set by default — the hook doesn't recognize the environment, emits advisory JSON to stdout, and Claude Code interprets that as a hook failure.
+
+**Fix:**
+```powershell
+[System.Environment]::SetEnvironmentVariable("CLAUDECODE", "1", "User")
+```
+Run once in PowerShell. Persists across sessions at User scope. Restart terminal after applying.
+
+**Affected hooks:** `gsd-read-guard.js`, potentially `gsd-prompt-guard.js`, `gsd-workflow-guard.js`
+**Discovered:** 2026-05-21 — TicTacToeGenerals Phase 3 scaffold session.
+
+---
+
 ## Breach Response Checklist
 
 1. Revoke all tokens (API keys, OAuth, deploy tokens)
